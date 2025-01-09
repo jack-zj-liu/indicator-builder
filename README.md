@@ -16,7 +16,7 @@ npm run dev
 ```
 If you encounter any issues, try installing the dependencies first:
 ```bash
-bpm i
+npm i
 ```
 
 ### Backend
