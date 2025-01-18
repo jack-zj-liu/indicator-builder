@@ -1,9 +1,14 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { createChart } from 'lightweight-charts';
 import { useLocation } from 'react-router-dom';
+import * as Constants from '../constants'
 import './App.css';
 
 const Macd = () => {
+  useEffect(() => {
+    document.title = `MACD Chart`;
+  }, []);
+
   const chartContainerRef = useRef(null);
   const chartInstance = useRef(null);
   const [priceData, setPriceData] = useState([]);
@@ -43,7 +48,7 @@ const Macd = () => {
     if (asset && timeInterval) {
       const fetchData = async () => {
         try {
-          const response = await fetch(`http://127.0.0.1:8000/time_series_monthly/${asset}`);
+          const response = await fetch(`${Constants.BACKEND_URL}/time_series_${timeInterval.toLowerCase()}/${asset}`);
           if (!response.ok) {
             throw new Error('Failed to fetch data');
           }

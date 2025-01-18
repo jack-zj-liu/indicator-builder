@@ -1,0 +1,92 @@
+AAPL: Apple Inc
+AIG: American International Group Inc
+AMGN: Amgen Inc
+AMT: American Tower Corporation
+AMD: Advanced Micro Devices Inc
+AVGO: Broadcom Inc
+BA: Boeing Company
+BABA: Alibaba Group Holding Limited
+BKLN: Invesco Senior Loan ETF
+BLK: BlackRock Inc
+BRK.B: Berkshire Hathaway Inc (Class B)
+CAT: Caterpillar Inc
+CCI: Crown Castle International Corp
+C: Citigroup Inc
+CHTR: Charter Communications Inc
+COP: ConocoPhillips
+COST: Costco Wholesale Corporation
+CVS: CVS Health Corporation
+CVX: Chevron Corporation
+D: Dominion Energy Inc
+DE: Deere & Company
+DIS: The Walt Disney Company
+DTE: DTE Energy Company
+DUK: Duke Energy Corporation
+ED: Consolidated Edison Inc
+EIX: Edison International
+EXC: Exelon Corporation
+F: Ford Motor Company
+FE: FirstEnergy Corp
+GM: General Motors Company
+GE: General Electric Company
+GILD: Gilead Sciences Inc
+GOOG: Alphabet Inc Class C
+GS: Goldman Sachs Group Inc
+HD: The Home Depot Inc
+HES: Hess Corporation
+IBM: IBM Common Stock
+INTC: Intel Corporation
+IRM: Iron Mountain Inc
+ITW: Illinois Tool Works Inc
+JNJ: Johnson & Johnson
+JPM: JPMorgan Chase & Co
+KHC: The Kraft Heinz Company
+KO: The Coca-Cola Company
+LMT: Lockheed Martin Corporation
+LNG: Cheniere Energy Inc
+LUV: Southwest Airlines Co
+MCD: McDonald's Corporation
+MDT: Medtronic PLC
+META: Meta Platforms Inc
+MGM: MGM Resorts International
+MRO: Marathon Oil Corporation
+MS: Morgan Stanley
+MSFT: Microsoft Corporation
+NEE: NextEra Energy Inc
+NFLX: Netflix Inc
+NKE: Nike Inc
+O: Realty Income Corporation
+OXY: Occidental Petroleum Corporation
+PEP: PepsiCo Inc
+PFE: Pfizer Inc
+PG: Procter & Gamble Company
+PLD: Prologis Inc
+PRU: Prudential Financial Inc
+PSA: Public Storage
+PPL: PPL Corporation
+ROK: Rockwell Automation Inc
+RDS.A: Royal Dutch Shell (Class A)
+SBUX: Starbucks Corporation
+SLB: Schlumberger Limited
+SO: Southern Company
+SPG: Simon Property Group
+SPY: SPDR S&P 500 ETF Trust
+SRE: Sempra Energy
+STOR: STORE Capital Corporation
+T: AT&T Inc
+TROW: T. Rowe Price Group Inc
+TSLA: Tesla Inc
+TSM: Taiwan Semiconductor Manufacturing Company
+UNH: UnitedHealth Group Incorporated
+UAL: United Airlines Holdings Inc
+V: Visa Inc
+VNO: Vornado Realty Trust
+VZ: Verizon Communications Inc
+WBA: Walgreens Boots Alliance Inc
+WEC: WEC Energy Group Inc
+WFC: Wells Fargo & Co
+XEL: Xcel Energy Inc
+XLF: Financial Select Sector SPDR Fund
+XLY: Consumer Discretionary Select Sector SPDR Fund
+XOM: ExxonMobil Corporation
+ZTS: Zoetis Inc

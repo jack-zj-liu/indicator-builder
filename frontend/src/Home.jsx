@@ -1,24 +1,46 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import * as Constants from '../constants'
 
 const Home = () => {
+  useEffect(() => {
+    document.title = "Indicator Builder";
+  }, []);
+
   const [indicator, setIndicator] = useState('');
-  const [asset, setAsset] = useState('IBM');
+  const [asset, setAsset] = useState('');
+  const [assets, setAssets] = useState({});
   const [timeInterval, setTimeInterval] = useState('daily');
   const navigate = useNavigate();
 
-  const handleGenerateUrl = () => {
-    let url = '';
-
-    if (indicator === 'MACD') {
-      url = `/macd?asset=${asset}&ti=${timeInterval}`;
-    } else if (indicator === 'RSI') {
-      url = `/rsi?asset=${asset}&ti=${timeInterval}`;
+  const fetchAssets = async () => {
+    try {
+      const response = await fetch(`${Constants.BACKEND_URL}/list_assets`);
+      if (!response.ok) {
+        throw new Error('Failed to fetch assets');
+      }
+      const data = await response.json();
+      setAssets(data.assets); 
+      const firstKey = Object.keys(data.assets)[0];
+      setAsset(firstKey);
+    } catch (error) {
+      console.error('Error fetching assets:', error);
     }
-
-    // Open the URL in a new tab
-    window.open(`http://localhost:5173${url}`, '_blank');
   };
+
+  useEffect(() => {
+    fetchAssets();
+  }, []);
+
+  const handleGenerateUrl = () => {
+    if (indicator) {
+      const url = `/${indicator.toLowerCase()}?asset=${asset}&ti=${timeInterval}`;
+      window.open(`${Constants.FRONTEND_URL}${url}`, '_blank');
+    } else {
+      alert('Please select an indicator!');
+    }
+  };
+  
 
   return (
     <div>
@@ -29,16 +51,19 @@ const Home = () => {
         <select value={indicator} onChange={(e) => setIndicator(e.target.value)}>
           <option value="">Select Indicator</option>
           <option value="MACD">MACD</option>
-          <option value="RSI">RSI</option> {/* Add RSI option */}
+          <option value="RSI">RSI</option>
         </select>
       </div>
 
       <div>
         <label>Select Asset:</label>
         <select value={asset} onChange={(e) => setAsset(e.target.value)}>
-          <option value="IBM">IBM</option>
-          <option value="AAPL">AAPL</option>
-          <option value="GOOG">GOOG</option>
+          <option value="">Select Asset</option>
+          {Object.entries(assets).map(([key, value]) => (
+            <option key={key} value={key}>
+              {value}
+            </option>
+          ))}
         </select>
       </div>
 
