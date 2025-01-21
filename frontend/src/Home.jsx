@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import './Home.css'
 import * as Constants from '../constants'
+import Autocomplete from './Autocomplete';
 
 const Home = () => {
   useEffect(() => {
@@ -20,7 +22,7 @@ const Home = () => {
         throw new Error('Failed to fetch assets');
       }
       const data = await response.json();
-      setAssets(data.assets); 
+      setAssets(data.assets);
       const firstKey = Object.keys(data.assets)[0];
       setAsset(firstKey);
     } catch (error) {
@@ -57,14 +59,7 @@ const Home = () => {
 
       <div>
         <label>Select Asset:</label>
-        <select value={asset} onChange={(e) => setAsset(e.target.value)}>
-          <option value="">Select Asset</option>
-          {Object.entries(assets).map(([key, value]) => (
-            <option key={key} value={key}>
-              {value}
-            </option>
-          ))}
-        </select>
+        <Autocomplete suggestions={assets} setValue={setAsset} />
       </div>
 
       <div>
