@@ -31,6 +31,11 @@ pip install "fastapi[standard]"
 pip install yfinance --upgrade --no-cache-dir
 pip install pandas
 ```
+Install Redis (optional, for caching pricing data):
+```bash
+pip install redis
+sudo ./redis-setup.sh
+```
 Start the backend:
 ```bash
 source .venv/bin/activate

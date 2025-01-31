@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import './Autocomplete.css';
 
 function swap(m){
@@ -10,21 +10,25 @@ function swap(m){
 }
 
 const Autocomplete = ({ suggestions, setValue }) => {
+  const [query, SetQuery] = useState('');
   const [filteredSuggestions, setFilteredSuggestions] = useState([]);
   const [inputValue, setInputValue] = useState('');
   const [acceptedValue, setAcceptedValue] = useState('');
   const displayValues = Array.from(Object.values(suggestions));
   const nameToSymbol = swap(suggestions);
 
-  const handleChange = (event) => {
-    const inputValue = event.target.value;
+  const handleChange = (value) => {
+    const inputValue = value.toLowerCase();
     setInputValue(inputValue);
 
-    // Filter suggestions based on input value
-    const filteredSuggestions = displayValues.filter(suggestion =>
-      suggestion.toLowerCase().includes(inputValue.toLowerCase())
-    );
-    setFilteredSuggestions(filteredSuggestions);
+    // Filter items that start with the search string
+    const startsWithSearchString = displayValues.filter(item => item.toLowerCase().startsWith(inputValue));
+
+    // Filter items that don't start with the search string but contain it
+    const containsSearchString = displayValues.filter(item => !item.toLowerCase().startsWith(inputValue)
+                                                      && item.toLowerCase().includes(inputValue));
+    const resultArray = startsWithSearchString.concat(containsSearchString);
+    setFilteredSuggestions(resultArray);
   };
 
   const handleSelect = (value) => {
@@ -39,13 +43,23 @@ const Autocomplete = ({ suggestions, setValue }) => {
     setFilteredSuggestions([]);
   }
 
+  const handleType = (value) => {
+    setInputValue(value);
+    SetQuery(value);
+  }
+
+  useEffect(() => {
+    const timeOutId = setTimeout(() => handleChange(query), 250);
+    return () => clearTimeout(timeOutId);
+  }, [query])
+
   return (
     <div className="autocomplete-container">
       <input
         className="autocomplete-input"
         type="text"
         value={inputValue}
-        onChange={handleChange}
+        onChange={event => handleType(event.target.value)}
         placeholder="Type to search..."
         onBlur={handleBlur}
       />
