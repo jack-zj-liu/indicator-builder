@@ -24,6 +24,7 @@ The backend is built with Python's FastAPI and uses `yfinance` to retrieve data.
 Set up the virtual environment:
 ```bash
 python3 -m venv .venv
+source .venv/bin/activate
 ```
 Install the required packages:
 ```bash
