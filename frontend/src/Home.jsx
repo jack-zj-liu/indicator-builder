@@ -54,6 +54,9 @@ const Home = () => {
           <option value="">Select Indicator</option>
           <option value="MACD">MACD</option>
           <option value="RSI">RSI</option>
+          <option value="TRIPLEEMA">Triple EMA</option>
+          <option value="AWESOME">Awesome Oscillator</option>
+          <option value="BOLLINGERBANDS">Bollinger Bands</option>
         </select>
       </div>
 
