@@ -7,19 +7,19 @@
 The currently implemented indicators include:
 
 - **MACD (Moving Average Convergence Divergence):**  
-  A momentum oscillator that compares two exponential moving averages (typically the 12-day and 26-day EMAs) to reveal changes in a trend’s strength, direction, momentum, and duration. It also computes a signal line (usually a 9-day EMA of the MACD) to aid in generating buy or sell signals.
+  A momentum oscillator that compares two exponential moving averages (typically the 12-day and 26-day EMAs) to reveal changes in a trend’s strength, direction, momentum, and duration. It also computes a signal line (usually a 9-day EMA of the MACD).
 
 - **RSI (Relative Strength Index):**  
-  A momentum oscillator that measures the velocity and magnitude of price movements on a scale from 0 to 100. It is frequently used to identify overbought conditions (typically above 70) or oversold conditions (typically below 30), helping traders spot potential reversals.
+  A momentum oscillator that measures the velocity and magnitude of price movements on a scale from 0 to 100. It is used to identify overbought conditions (typically above 70) or oversold conditions (typically below 30).
 
 - **Triple EMA (Triple Exponential Moving Average):**  
-  A trend indicator that employs three consecutive EMAs to smooth price data more effectively and reduce lag. It enhances trend detection by weighting recent price data more heavily compared to traditional single-period EMAs.
+  A trend indicator that employs three consecutive EMAs to smooth price data more effectively. Trend crossovers can indicate trend and direction strength.
 
 - **Awesome Oscillator:**  
-  Developed by Bill Williams, this indicator measures market momentum by calculating the difference between a 5-period and a 34-period simple moving average of the price midpoints (high plus low divided by two). The histogram visualization helps signal potential trend reversals or confirm ongoing trends.
+  This indicator measures market momentum by calculating the difference between a 5-period and a 34-period simple moving average of the price midpoints (high plus low divided by two). The histogram visualization helps signal potential trend reversals or confirm ongoing trends.
 
 - **Bollinger Bands:**  
-  A volatility indicator that plots a simple moving average (SMA) along with an upper and lower band at a specified number of standard deviations (commonly 2) from the SMA. These bands widen during periods of high volatility and contract during low volatility, providing insights into potential overbought or oversold price levels.
+  A volatility indicator that plots a simple moving average (SMA) along with an upper and lower band at a specified number of standard deviations (commonly 2) from the SMA. These bands widen during periods of high volatility and contract during low volatility, indicating potential overbought or oversold price levels.
 
 ---
 
