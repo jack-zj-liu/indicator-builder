@@ -20,6 +20,8 @@ try:
 except:
     redis_available = False
 
+redis_available = False
+
 
 app = FastAPI()
 app.add_middleware(

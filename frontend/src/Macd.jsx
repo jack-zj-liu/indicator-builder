@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { createChart } from 'lightweight-charts';
+import { createChart, ColorType } from 'lightweight-charts';
 import { useLocation } from 'react-router-dom';
-import * as Constants from '../constants'
+import * as Constants from '../constants';
 import './App.css';
 
 const Macd = () => {
@@ -64,19 +64,24 @@ const Macd = () => {
   }, [asset, timeInterval]);
 
   useEffect(() => {
-    if (priceData.length === 0) return;
+    if (priceData.length === 0 || !chartContainerRef.current) return;
 
-    const chart = createChart(chartContainerRef.current, {
-      width: window.innerWidth * 0.8,
-      height: window.innerHeight * 0.6,
-      layout: { textColor: 'black', backgroundColor: 'white' },
+    const container = chartContainerRef.current;
+    const chartWidth = container.clientWidth;
+    const chartHeight = container.clientHeight;
+
+    const chart = createChart(container, {
+      width: chartWidth,
+      height: chartHeight,
+      layout: { textColor: '#dce0dc', background: { type: ColorType.VerticalGradient, topColor: '#36004d', bottomColor: '#151515' }},
     });
     chartInstance.current = chart;
 
-    const lineSeries = chart.addLineSeries();
+    const lineSeries = chart.addLineSeries({
+      color: '#ffffff',
+    });
     lineSeries.setData(priceData);
 
-    // Calculate EMA and MACD
     const ema12 = calculateEMA(priceData, 12);
     const ema26 = calculateEMA(priceData, 26);
     const macdLine = ema12.map((point, index) => ({
@@ -85,19 +90,20 @@ const Macd = () => {
     }));
     const signalLine = calculateEMA(macdLine, 9);
 
-    // Add a new pane for the MACD
-    const macdSeries = chart.addLineSeries({ color: 'blue', lineWidth: 2 });
-    const signalSeries = chart.addLineSeries({ color: 'red', lineWidth: 2 });
+    const macdSeries = chart.addLineSeries({ color: '#74adfc', lineWidth: 2 });
+    const signalSeries = chart.addLineSeries({ color: '#fc7674', lineWidth: 2 });
 
     macdSeries.setData(macdLine);
     signalSeries.setData(signalLine);
 
-    // Resize the chart on window resize
     const handleResize = () => {
-      const width = window.innerWidth * 0.8;
-      const height = window.innerHeight * 0.6;
-      chart.resize(width, height);
+      if (chartInstance.current) {
+        const newWidth = container.clientWidth;
+        const newHeight = container.clientHeight;
+        chartInstance.current.resize(newWidth, newHeight);
+      }
     };
+
     window.addEventListener('resize', handleResize);
 
     return () => {
@@ -106,10 +112,33 @@ const Macd = () => {
     };
   }, [priceData]);
 
+  const [isHovered, setIsHovered] = useState(false);
+
   return (
-    <div className="macd-container">
-      <h2 className="macd-title">MACD for {asset} - {timeInterval}</h2>
-      <div ref={chartContainerRef} />
+    <div className="indicator-container">
+      <h2 className="indicator-title">
+        MACD for {asset} {timeInterval}
+      </h2>
+      <div className="chart-container" ref={chartContainerRef} />
+      
+      {/* Question mark icon at the bottom right corner */}
+      <div
+        className="question-mark-icon"
+        onMouseEnter={() => setIsHovered(true)}
+        onMouseLeave={() => setIsHovered(false)}
+      >
+        ?
+      </div>
+
+      {isHovered && (
+        <div className="tooltip-content">
+The Moving Average Convergence Divergence (MACD) is a popular technical analysis tool used by traders to assess the momentum of an asset, identify trend directions, and spot potential reversals. Developed by Gerald Appel in the late 1970s, the MACD has become one of the most widely used indicators for analyzing price trends in various markets, including stocks, forex, and commodities. It combines elements of both trend-following and momentum-based strategies, making it a versatile tool for traders seeking to make informed buy or sell decisions.<br /><br />
+
+Traders use the MACD to determine the strength and direction of a trend, as well as to spot potential turning points. The indicator is typically employed to identify bullish and bearish crossovers, where the MACD line (the difference between the 12-day and 26-day exponential moving averages) crosses above or below the signal line (the 9-day EMA of the MACD). A crossover above the signal line is often interpreted as a buy signal, indicating that the asset is gaining upward momentum. Conversely, a crossover below the signal line is seen as a sell signal, suggesting that the downward momentum is increasing. Additionally, the MACD histogram, which represents the difference between the MACD and its signal line, can help traders visually identify shifts in momentum.<br /><br />
+
+The MACD consists of three main components: the MACD line, the signal line, and the histogram. The MACD line is calculated by subtracting the 26-period Exponential Moving Average (EMA) from the 12-period EMA, providing insight into the short-term momentum relative to the long-term trend. The signal line is a 9-period EMA of the MACD line, which smooths the fluctuations and makes crossovers easier to identify. The histogram represents the difference between the MACD line and the signal line, visually indicating the strength of the trend. A growing histogram suggests increasing momentum, while a shrinking histogram signals weakening momentum. Divergence between the MACD and price action is also a key signal; for example, if the price is making new highs while the MACD fails to do so, it may indicate an impending reversal.
+        </div>
+      )}
     </div>
   );
 };
