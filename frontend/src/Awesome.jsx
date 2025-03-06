@@ -1,8 +1,8 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { createChart } from 'lightweight-charts';
+import { createChart, ColorType } from 'lightweight-charts';
 import { useLocation } from 'react-router-dom';
 import * as Constants from '../constants';
-import './App.css';
+import './Indicator.css';
 
 const Awesome = () => {
   useEffect(() => {
@@ -78,15 +78,19 @@ const Awesome = () => {
   useEffect(() => {
     if (priceData.length === 0) return;
 
-    const chart = createChart(chartContainerRef.current, {
-      width: window.innerWidth * 0.8,
-      height: window.innerHeight * 0.6,
-      layout: { textColor: 'black', backgroundColor: 'white' },
+    const container = chartContainerRef.current;
+    const chartWidth = container.clientWidth;
+    const chartHeight = container.clientHeight;
+
+    const chart = createChart(container, {
+      width: chartWidth,
+      height: chartHeight,
+      layout: { textColor: '#dce0dc', background: { type: ColorType.VerticalGradient, topColor: '#36004d', bottomColor: '#151515' }},
     });
     chartInstance.current = chart;
 
     // Add primary price line series
-    const priceSeries = chart.addLineSeries();
+    const priceSeries = chart.addLineSeries({ color: '#ffffff' });
     priceSeries.setData(priceData);
 
     // Calculate AO values
@@ -117,14 +121,35 @@ const Awesome = () => {
     };
   }, [priceData]);
 
-  return (
-    <div className="awesome-oscillator-container">
-      <h2 className="awesome-oscillator-title">
-        Awesome Oscillator for {asset} - {timeInterval}
-      </h2>
-      <div ref={chartContainerRef} />
-    </div>
-  );
+  const [isHovered, setIsHovered] = useState(false);
+  
+    return (
+      <div className="indicator-container">
+        <h2 className="indicator-title">
+          Awesome Oscillator for {asset} {timeInterval}
+        </h2>
+        <div className="chart-container" ref={chartContainerRef} />
+        
+        {/* Question mark icon at the bottom right corner */}
+        <div
+          className="question-mark-icon"
+          onMouseEnter={() => setIsHovered(true)}
+          onMouseLeave={() => setIsHovered(false)}
+        >
+          ?
+        </div>
+  
+        {isHovered && (
+          <div className="tooltip-content">
+  The Awesome Oscillator (AO) is a momentum-based technical indicator developed by Bill Williams to measure market momentum and identify potential trend reversals. It is designed to compare recent market momentum with a broader historical context, helping traders assess the strength of an ongoing trend. AO is calculated as the difference between a short-term and a long-term simple moving average (SMA) of the median price, displayed as a histogram that fluctuates above and below a zero line. This makes it a valuable tool for traders looking to confirm trends and detect shifts in market sentiment.<br /><br />
+  
+  Traders use the Awesome Oscillator to identify bullish or bearish momentum, spot trend reversals, and generate trading signals. A positive AO value indicates that short-term momentum is stronger than long-term momentum, signaling a potential uptrend, whereas a negative AO suggests weakening momentum and a possible downtrend. Common trading strategies with AO include the “Saucer” setup, which looks for consecutive green or red bars to confirm momentum shifts, and the “Zero Line Crossover,” where AO crossing above zero suggests a buying opportunity while crossing below zero signals a selling opportunity. Additionally, AO can help traders spot divergences between price movements and momentum, providing early warnings of trend exhaustion.<br /><br />
+  
+  The Awesome Oscillator is calculated using the difference between a 5-period and a 34-period simple moving average (SMA) of the median price, which is the average of the high and low prices. The resulting values are plotted as a histogram, where green bars indicate rising momentum and red bars indicate falling momentum. Because AO focuses on price momentum rather than absolute price levels, it helps traders identify shifts in market strength, making it a useful confirmation tool when analyzing trends and potential entry or exit points.
+          </div>
+        )}
+      </div>
+    );
 };
 
 export default Awesome;

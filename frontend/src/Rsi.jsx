@@ -1,8 +1,9 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { createChart } from 'lightweight-charts';
+import { createChart, ColorType } from 'lightweight-charts';
+import { MathJax, MathJaxContext } from "better-react-mathjax";
 import { useLocation } from 'react-router-dom';
 import * as Constants from '../constants'
-import './App.css';
+import './Indicator.css';
 
 const Rsi = () => {
   useEffect(() => {
@@ -66,14 +67,18 @@ const Rsi = () => {
   useEffect(() => {
     if (priceData.length === 0) return;
 
-    const chart = createChart(chartContainerRef.current, {
-      width: window.innerWidth * 0.8,
-      height: window.innerHeight * 0.6,
-      layout: { textColor: 'black', backgroundColor: 'white' },
+    const container = chartContainerRef.current;
+    const chartWidth = container.clientWidth;
+    const chartHeight = container.clientHeight;
+
+    const chart = createChart(container, {
+      width: chartWidth,
+      height: chartHeight,
+      layout: { textColor: '#dce0dc', background: { type: ColorType.VerticalGradient, topColor: '#36004d', bottomColor: '#151515' }},
     });
     chartInstance.current = chart;
 
-    const lineSeries = chart.addLineSeries();
+    const lineSeries = chart.addLineSeries({ color: '#ffffff' });
     lineSeries.setData(priceData);
 
     // Calculate EMA and RSI
@@ -81,7 +86,7 @@ const Rsi = () => {
     const rsiValues = calculateEMA(priceData, rsiPeriod); // For simplicity, using EMA to simulate RSI
 
     // Add a new pane for the RSI
-    const rsiSeries = chart.addLineSeries({ color: 'green', lineWidth: 2 });
+    const rsiSeries = chart.addLineSeries({ color: 'yellow', lineWidth: 3 });
     rsiSeries.setData(rsiValues);
 
     // Resize the chart on window resize
@@ -99,10 +104,38 @@ const Rsi = () => {
     };
   }, [priceData]);
 
+  const [isHovered, setIsHovered] = useState(false);
+
   return (
-    <div className="rsi-container">
-      <h2 className="rsi-title">RSI for {asset} - {timeInterval}</h2>
-      <div ref={chartContainerRef} />
+    <div className="indicator-container">
+      <h2 className="indicator-title">
+        Relative Strength Index for {asset} {timeInterval}
+      </h2>
+      <div className="chart-container" ref={chartContainerRef} />
+      
+      {/* Question mark icon at the bottom right corner */}
+      <div
+        className="question-mark-icon"
+        onMouseEnter={() => setIsHovered(true)}
+        onMouseLeave={() => setIsHovered(false)}
+      >
+        ?
+      </div>
+
+      {isHovered && (
+        <MathJaxContext>
+          <div className="tooltip-content">
+          The Relative Strength Index (RSI) is a popular momentum oscillator developed by J. Welles Wilder in 1978 to measure the speed and change of price movements. It is used to identify overbought and oversold conditions in a market, helping traders determine potential reversal points. RSI is displayed as a line graph that oscillates between 0 and 100, with values above 70 typically indicating an overbought market and values below 30 suggesting an oversold market. Due to its effectiveness in identifying momentum shifts, RSI is widely used in stock, forex, and cryptocurrency trading.<br /><br />
+          Traders use RSI to gauge market momentum, confirm trends, and generate buy or sell signals. When RSI rises above 70, it suggests that an asset may be overbought and due for a price correction, while an RSI below 30 indicates oversold conditions, potentially signaling a buying opportunity. Divergences between RSI and price action can also provide valuable insights; for example, if the price makes a new high while RSI does not, it may indicate weakening momentum and a potential trend reversal. Additionally, traders use RSI in conjunction with moving averages or trendlines to confirm signals and refine trading strategies.<br /><br />
+          RSI is calculated using the formula:<br /><br />
+          <MathJax>
+            {`\\( RSI = 100 - \\left( \\frac{100}{1 + RS} \\right) \\)`}
+          </MathJax>
+          <br />
+          where RS (Relative Strength) is the ratio of the average gain to the average loss over a specified period, typically 14 periods. The average gain is determined by summing all positive price changes over the period and dividing by 14, while the average loss is calculated similarly using negative price changes. To smooth the calculation, Wilder suggested using an exponential moving average for both gains and losses. The RSI value fluctuates between 0 and 100, with extreme readings indicating potential overbought or oversold conditions. Because RSI adapts to price movements, it provides traders with a dynamic measure of momentum, making it a useful tool for identifying trend strength and potential market reversals.
+          </div>
+        </MathJaxContext>
+      )}
     </div>
   );
 };

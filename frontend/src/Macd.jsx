@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { createChart, ColorType } from 'lightweight-charts';
 import { useLocation } from 'react-router-dom';
 import * as Constants from '../constants';
+import './Indicator.css';
 import './App.css';
 
 const Macd = () => {
@@ -77,9 +78,7 @@ const Macd = () => {
     });
     chartInstance.current = chart;
 
-    const lineSeries = chart.addLineSeries({
-      color: '#ffffff',
-    });
+    const lineSeries = chart.addLineSeries({ color: '#ffffff' });
     lineSeries.setData(priceData);
 
     const ema12 = calculateEMA(priceData, 12);
@@ -117,7 +116,7 @@ const Macd = () => {
   return (
     <div className="indicator-container">
       <h2 className="indicator-title">
-        MACD for {asset} {timeInterval}
+        Moving Average Convergence Divergence for {asset} {timeInterval}
       </h2>
       <div className="chart-container" ref={chartContainerRef} />
       
