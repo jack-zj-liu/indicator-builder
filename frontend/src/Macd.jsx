@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { createChart, ColorType } from 'lightweight-charts';
 import { useLocation } from 'react-router-dom';
+import { CloudBackGround } from './VantaComponents'
 import * as Constants from '../constants';
 import './Indicator.css';
 import './App.css';
@@ -74,12 +75,13 @@ const Macd = () => {
     const chart = createChart(container, {
       width: chartWidth,
       height: chartHeight,
-      layout: { textColor: '#dce0dc', background: { type: ColorType.VerticalGradient, topColor: '#36004d', bottomColor: '#151515' }},
+      layout: { textColor: Constants.GRAPH_TEXT_COLOR, background: 
+        { type: ColorType.VerticalGradient, topColor: Constants.TOP_COLOR, bottomColor: Constants.BOTTOM_COLOR }},
     });
     chartInstance.current = chart;
 
-    const lineSeries = chart.addLineSeries({ color: '#ffffff' });
-    lineSeries.setData(priceData);
+    const priceSeries = chart.addLineSeries({ color: Constants.GRAPH_PRICE_COLOR });
+    priceSeries.setData(priceData);
 
     const ema12 = calculateEMA(priceData, 12);
     const ema26 = calculateEMA(priceData, 26);
@@ -115,8 +117,9 @@ const Macd = () => {
 
   return (
     <div className="indicator-container">
+      <CloudBackGround/>
       <h2 className="indicator-title">
-        Moving Average Convergence Divergence for {asset} {timeInterval}
+        {asset}: Moving Average Convergence Divergence - {timeInterval.toUpperCase()}
       </h2>
       <div className="chart-container" ref={chartContainerRef} />
       

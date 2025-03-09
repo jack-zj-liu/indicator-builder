@@ -13,19 +13,23 @@ body {
   width: 100%;
 }
 
-.indicator-title {
+.indicator-container h2 {
   text-align: center;
-  font-size: 24px;
-  font-weight: bold;
+  font-size: 32px;
   margin-bottom: 10px;
+  background: linear-gradient(to bottom right, rgb(137, 137, 137), rgb(2, 2, 176));
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
 }
 
 .chart-container {
-  width: 90vw;
-  height: 70vh;
-  max-width: 1200px;
-  max-height: 700px;
-  border: 5px solid grey;
+  width: 95vw;
+  height: 80vh;
+  max-width: 1700px;
+  max-height: 800px;
+  border: 6px solid grey;
   border-radius: 10px;
   padding: 0px;
   overflow: hidden;
@@ -37,7 +41,7 @@ body {
   bottom: 20px;
   right: 20px;
   font-size: 30px;
-  color: #74adfc;
+  color: #001e48;
   cursor: pointer;
   background-color: transparent;
   border: none;

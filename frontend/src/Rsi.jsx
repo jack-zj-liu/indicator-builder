@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { createChart, ColorType } from 'lightweight-charts';
 import { MathJax, MathJaxContext } from "better-react-mathjax";
 import { useLocation } from 'react-router-dom';
+import { CloudBackGround } from './VantaComponents'
 import * as Constants from '../constants'
 import './Indicator.css';
 
@@ -74,12 +75,13 @@ const Rsi = () => {
     const chart = createChart(container, {
       width: chartWidth,
       height: chartHeight,
-      layout: { textColor: '#dce0dc', background: { type: ColorType.VerticalGradient, topColor: '#36004d', bottomColor: '#151515' }},
+      layout: { textColor: Constants.GRAPH_TEXT_COLOR, background: 
+        { type: ColorType.VerticalGradient, topColor: Constants.TOP_COLOR, bottomColor: Constants.BOTTOM_COLOR }},
     });
     chartInstance.current = chart;
 
-    const lineSeries = chart.addLineSeries({ color: '#ffffff' });
-    lineSeries.setData(priceData);
+    const priceSeries = chart.addLineSeries({ color: Constants.GRAPH_PRICE_COLOR });
+    priceSeries.setData(priceData);
 
     // Calculate EMA and RSI
     const rsiPeriod = 14; // RSI period (you can adjust this)
@@ -108,8 +110,9 @@ const Rsi = () => {
 
   return (
     <div className="indicator-container">
+      <CloudBackGround/>
       <h2 className="indicator-title">
-        Relative Strength Index for {asset} {timeInterval}
+        {asset}: Relative Strength Index - {timeInterval.toUpperCase()}
       </h2>
       <div className="chart-container" ref={chartContainerRef} />
       

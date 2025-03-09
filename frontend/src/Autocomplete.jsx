@@ -60,7 +60,7 @@ const Autocomplete = ({ suggestions, setValue }) => {
         type="text"
         value={inputValue}
         onChange={event => handleType(event.target.value)}
-        placeholder="Type to search..."
+        placeholder="Search Assets..."
         onBlur={handleBlur}
       />
       <ul className="autocomplete-suggestions">

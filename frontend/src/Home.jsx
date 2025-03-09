@@ -3,21 +3,14 @@ import { useNavigate } from "react-router-dom";
 import * as Constants from "../constants";
 import Autocomplete from "./Autocomplete";
 import { createChart, ColorType } from "lightweight-charts";
+import { WaveBackGround } from './VantaComponents'
 import "./Home.css";
-import "./App.css";
-
-// Placeholder function: Replace with actual implementation
-const calculateEMA = (data, period) => {
-  return data.map((point) => ({ time: point.time, value: point.value }));
-};
+import "./App.css"; 
 
 const Home = () => {
-  useEffect(() => {
-    document.title = "Indicator Builder";
-  }, []);
-
+  const [stocks, setStocks] = useState([]);
   const [indicator, setIndicator] = useState("");
-  const [asset, setAsset] = useState("NVDA");
+  const [asset, setAsset] = useState("SPY");
   const [assets, setAssets] = useState({});
   const [timeInterval, setTimeInterval] = useState("daily");
   const [priceData, setPriceData] = useState([]);
@@ -25,6 +18,28 @@ const Home = () => {
   const chartInstance = useRef(null);
   const navigate = useNavigate();
 
+  // Fetch stock data
+  useEffect(() => {
+    // Fetch data from your backend API
+    fetch(`${Constants.BACKEND_URL}/get_common_stocks`)
+      .then((response) => response.json()) // Parse the JSON response
+      .then((data) => {
+        console.log(data);
+        // Check if 'common_stocks' exists in the response and is an object
+        const fetchedStocks = data.common_stocks;
+        // Convert the object into an array of stock data
+        const stocksArray = Object.entries(fetchedStocks).map(([symbol, stock]) => ({
+          symbol,
+          ...stock,
+        }));
+        setStocks(stocksArray); // Set the stocks state to an array
+      })
+      .catch((err) => {
+        console.error('Error fetching data:', err);
+      });
+  }, []);
+
+  // Existing data fetching for assets and price data
   useEffect(() => {
     if (asset && timeInterval) {
       const fetchData = async () => {
@@ -41,7 +56,6 @@ const Home = () => {
           console.error("Error fetching data:", error);
         }
       };
-
       fetchData();
     }
   }, [asset, timeInterval]);
@@ -54,8 +68,6 @@ const Home = () => {
       }
       const data = await response.json();
       setAssets(data.assets);
-      const firstKey = Object.keys(data.assets)[0];
-      setAsset(firstKey);
     } catch (error) {
       console.error("Error fetching assets:", error);
     }
@@ -88,7 +100,7 @@ const Home = () => {
         textColor: "#dce0dc",
         background: {
           type: ColorType.VerticalGradient,
-          topColor: "#36004d",
+          topColor: "#021e5c",
           bottomColor: "#151515",
         },
       },
@@ -98,14 +110,6 @@ const Home = () => {
 
     const lineSeries = chart.addLineSeries({ color: "#ffffff" });
     lineSeries.setData(priceData);
-
-    const ema12 = calculateEMA(priceData, 12);
-    const ema26 = calculateEMA(priceData, 26);
-    const macdLine = ema12.map((point, index) => ({
-      time: point.time,
-      value: point.value - ema26[index]?.value || 0,
-    }));
-    const signalLine = calculateEMA(macdLine, 9);
 
     const handleResize = () => {
       if (chartInstance.current) {
@@ -127,33 +131,40 @@ const Home = () => {
 
   return (
     <div className="home-container">
-      {/* Navbar */}
-      <div className="navbar">TraderHub</div>
-
-      {/* Top Left: Title */}
-      <div className="tile top-left">
-        <h1>Welcome to the Indicator Builder</h1>
-        <p>Build and analyze technical indicators for different assets with ease.</p>
+      <WaveBackGround />
+      <div className="navbar">
+        <img src="/logo_black.png" alt="Logo" className="logo" />
+        <h3>Indicator Builder</h3>
       </div>
-
-      {/* Top Right: NVDA Price */}
-      <div className="tile top-right">
-        <h2 className="indicator-title">
-          {asset} Pricing Data
-        </h2>
+      <div className="tile top-left">
+        <h3>Today at a Glance</h3>
+        <div>
+          {stocks.map((stock, index) => (
+            <div key={index} className="stock-info">
+              <p>{stock.ticker} - {stock.full_name}</p>
+              <p className={`price ${stock.is_positive ? "" : "negative"}`}>
+                {stock.price} ({stock.percent}%)
+              </p>
+            </div>
+          ))}
+        </div>
+      </div>
+      <div className="tile bottom-right">
+        <h3 className="indicator-title">{asset} Pricing Information</h3>
         <div className="sample-container" ref={chartContainerRef} />
       </div>
-
-      {/* Bottom Left: Additional Info Placeholder */}
       <div className="tile bottom-left">
-        <h2>How It Works</h2>
-        <p>Select an indicator, choose an asset, and pick a time interval to analyze.</p>
+        <h3>How It Works</h3>
+        <p> 
+          Trading indicators are tools used by traders to analyze market data, such as price and volume, in order to identify trends, momentum, volatility, and potential buy or sell signals. Common indicators include Moving Averages, Relative Strength Index, Bollinger Bands, Moving Average Convergence Divergence, and others. These indicators help traders make informed decisions by providing insights into market conditions and potential future price movements.<br/><br/>
+          The app generates trading indicators for selected stocks by retrieving historical price data at specified time intervals using APIs like Yahoo Finance. Users can select individual stocks, and the app fetches the relevant price data over a defined period. Based on this data, the app calculates various trading indicators and displays them alongside the stock's price chart. The app helps analyze stock performance through these indicators, helping them identify trends and make data-driven trading decisions.
+        </p>
       </div>
-
-      {/* Bottom Right: Existing Form */}
-      <div className="tile bottom-right">
+      <div className="tile top-right small-height">
+        <h3>Select Indicator Details</h3>
         <div className="form-container">
           <div className="dropdown-container">
+            <Autocomplete suggestions={assets} setValue={setAsset} />
             <select value={indicator} onChange={(e) => setIndicator(e.target.value)}>
               <option value="">Select Indicator</option>
               <option value="MACD">MACD</option>
@@ -162,17 +173,13 @@ const Home = () => {
               <option value="AWESOME">Awesome Oscillator</option>
               <option value="BOLLINGERBANDS">Bollinger Bands</option>
             </select>
-
-            <Autocomplete suggestions={assets} setValue={setAsset} />
-
             <select value={timeInterval} onChange={(e) => setTimeInterval(e.target.value)}>
               <option value="daily">Daily</option>
               <option value="weekly">Weekly</option>
               <option value="monthly">Monthly</option>
             </select>
           </div>
-
-          <button onClick={handleGenerateUrl}>Generate URL</button>
+          <button onClick={handleGenerateUrl}>Build Indicator!</button>
         </div>
       </div>
     </div>

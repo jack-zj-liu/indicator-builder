@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { createChart, ColorType } from 'lightweight-charts';
 import { useLocation } from 'react-router-dom';
+import { CloudBackGround } from './VantaComponents'
 import * as Constants from '../constants';
 import './Indicator.css';
 
@@ -86,11 +87,12 @@ const BollingerBands = () => {
     const chart = createChart(container, {
       width: chartWidth,
       height: chartHeight,
-      layout: { textColor: '#dce0dc', background: { type: ColorType.VerticalGradient, topColor: '#36004d', bottomColor: '#151515' }},
+      layout: { textColor: Constants.GRAPH_TEXT_COLOR, background: 
+        { type: ColorType.VerticalGradient, topColor: Constants.TOP_COLOR, bottomColor: Constants.BOTTOM_COLOR }},
     });
     chartInstance.current = chart;
 
-    const priceSeries = chart.addLineSeries({ color: '#ffffff' });
+    const priceSeries = chart.addLineSeries({ color: Constants.GRAPH_PRICE_COLOR });
     priceSeries.setData(priceData);
 
     const { median, upper, lower } = calculateBollingerBands(priceData);
@@ -124,8 +126,9 @@ const BollingerBands = () => {
   
     return (
       <div className="indicator-container">
+        <CloudBackGround/>
         <h2 className="indicator-title">
-          Bollinger Bands for {asset} {timeInterval}
+          {asset}: Bollinger Bands - {timeInterval.toUpperCase()}
         </h2>
         <div className="chart-container" ref={chartContainerRef} />
         

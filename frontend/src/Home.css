@@ -1,151 +1,201 @@
-/* Grid layout for the home page */
 .home-container {
   display: grid;
-  grid-template-columns: 2fr 3fr; /* Left column takes 40%, right column takes 60% */
-  grid-template-rows: auto 1fr 1fr; /* First row for navbar, rest for tiles */
+  grid-template-columns: 25% 75%;
+  grid-template-rows: 10% 30% 60%;
   height: 100vh;
   width: 100vw;
-  gap: 5px 0px; /* Gap between grid items */
-  padding: 0; /* Remove padding to ensure navbar connects to edges */
+  gap: 0px 0px;
+  padding: 0;
   box-sizing: border-box;
-  margin: 0; /* Remove margin to ensure no gaps */
+  margin: 0;
+  z-index: 5;
 }
 
-/* Navbar styling */
 .navbar {
-  grid-column: 1 / -1; /* Span across all columns */
-  grid-row: 1; /* Place it in the first row */
+  grid-column: 1 / -1;
+  grid-row: 1;
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: #333; /* Dark background */
-  color: white; /* White text */
-  padding: 20px 20px; /* Padding inside the navbar */
-  font-size: 24px;
-  font-weight: bold;
-  border-bottom: 3px solid grey; /* Add a border at the bottom */
-  z-index: 1000; /* Ensure it stays on top */
-  margin: 0; /* Remove margin */
-  width: 100%; /* Ensure it spans the full width */
-  box-sizing: border-box; /* Include padding in width calculation */
+  background-color: rgba(0, 0, 0, 0.5);
+  color: white;
+  padding: 20px 20px;
+  font-size: 36px;
+  font-weight: 900;
+  border-bottom: 3px solid rgb(89, 89, 89);
+  z-index: 1000;
+  margin: 0;
+  width: 100%;
+  box-sizing: border-box;
 }
 
-/* General tile styling */
+.navbar h3 {
+  font-size: 36px;
+  font-weight: bold;
+  background: linear-gradient(to bottom right, rgb(255, 230, 255), rgb(192, 192, 255));
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+}
+
 .tile {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  border: 3px solid grey;
+  border: 4px solid rgb(89, 89, 89);
   border-radius: 10px;
-  padding: 20px; /* Padding inside the tiles */
+  padding: 20px;
   color: white;
   font-size: 20px;
   font-weight: bold;
   text-align: center;
-  margin: 10px; /* Add margin around the tiles */
+  margin: 10px;
+  z-index: inherit;
+  background-color: rgba(0, 0, 0, 0.5);
 }
 
-/* Specific tile positioning */
 .top-left {
   grid-column: 1;
-  grid-row: 2; /* Adjusted for navbar */
+  grid-row: 2;
+  z-index: inherit;
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+.top-left h3 {
+  background: linear-gradient(to bottom right, rgb(255, 230, 255), rgb(192, 192, 255));
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
 }
 
 .top-right {
   grid-column: 2;
-  grid-row: 2; /* Adjusted for navbar */
+  grid-row: 2;
+  z-index: inherit;
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+.top-right h3 {
+  background: linear-gradient(to bottom right, rgb(255, 230, 255), rgb(192, 192, 255));
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
 }
 
 .bottom-left {
   grid-column: 1;
-  grid-row: 3; /* Adjusted for navbar */
+  grid-row: 3;
+  z-index: inherit;
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+.bottom-left h3 {
+  font-size: 28px;
+  background: linear-gradient(to bottom right, rgb(255, 230, 255), rgb(192, 192, 255));
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+}
+
+.tile p {
+  font-size: 14px;
 }
 
 .bottom-right {
   grid-column: 2;
-  grid-row: 3; /* Adjusted for navbar */
+  grid-row: 3;
 }
 
-/* Form container styling */
+.bottom-right h3 {
+  font-size: 28px;
+  background: linear-gradient(to bottom right, rgb(255, 230, 255), rgb(192, 192, 255));
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+}
+
 .form-container {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   width: 100%;
-  margin-top: 10px; /* Add some spacing from the top */
+  margin-top: 10px;
 }
 
-/* Flex row for dropdowns */
 .dropdown-container {
   display: flex;
-  gap: 10px; /* Space between dropdowns */
+  gap: 20px;
   justify-content: center;
   width: 100%;
-  margin-bottom: 20px; /* Add some space below the dropdowns */
+  margin-bottom: 20px;
 }
 
-/* Dark-themed dropdowns */
 .form-container select {
   padding: 8px;
   font-size: 16px;
-  width: 30%; /* Ensure they are responsive */
-  max-width: 250px; /* Ensure a maximum width for dropdowns */
-  box-sizing: border-box; /* Include padding in width calculation */
-  border-radius: 5px; /* Rounded corners */
-  background-color: #333; /* Dark background */
-  color: white; /* White text */
-  border: 1px solid #555; /* Darker border for visibility */
-  appearance: none; /* Remove default arrow */
-  -webkit-appearance: none; /* Remove default arrow for Safari */
-  -moz-appearance: none; /* Remove default arrow for Firefox */
-  cursor: pointer; /* Show pointer cursor */
+  width: 30%;
+  max-width: 250px;
+  box-sizing: border-box;
+  border-radius: 5px;
+  background-color: #333;
+  color: white;
+  border: 1px solid #555;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  cursor: pointer;
 }
 
-/* Custom dropdown arrow */
 .form-container select {
   background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23ffffff%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E");
   background-repeat: no-repeat;
-  background-position: right 8px center; /* Position the arrow */
-  background-size: 12px; /* Size of the arrow */
+  background-position: right 8px center;
+  background-size: 12px;
 }
 
-/* Hover effect for dropdowns */
 .form-container select:hover {
-  background-color: #444; /* Slightly lighter background on hover */
-  border-color: #666; /* Slightly lighter border on hover */
+  background-color: #444;
+  border-color: #666;
 }
 
-/* Focus effect for dropdowns */
 .form-container select:focus {
-  outline: none; /* Remove default focus outline */
-  border-color: #74adfc; /* Highlight border on focus */
-  box-shadow: 0 0 5px rgba(116, 173, 252, 0.5); /* Add a glow effect */
+  outline: none;
+  border-color: #74adfc;
+  box-shadow: 0 0 5px rgba(116, 173, 252, 0.5);
 }
 
-/* Dark-themed dropdown options */
 .form-container select option {
-  background-color: #333; /* Dark background for options */
-  color: white; /* White text for options */
+  background-color: #333;
+  color: white;
 }
 
-/* Center button below dropdowns */
 .form-container button {
-  margin-top: 20px; /* Added margin to space it from dropdowns */
+  margin-top: 0px;
   padding: 10px 15px;
   font-size: 18px;
   font-weight: bold;
   cursor: pointer;
-  background-color: #4caf50;
+  background: linear-gradient(to bottom right, rgb(177, 136, 177), rgb(120, 120, 173));
   color: white;
-  border: none;
+  border: 3px solid rgb(89, 89, 89);
   border-radius: 5px;
-  width: 50%;
-  box-sizing: border-box; /* Ensure the button width accounts for padding */
+  width: 70%;
+  box-sizing: border-box;
+  transition: box-shadow 0.3s ease-in-out;
 }
 
-/* Indicator container styling */
+.form-container button:hover {
+  box-shadow: 0 0 15px rgba(177, 136, 177, 0.8), 0 0 25px rgba(120, 120, 173, 0.8);
+  background: linear-gradient(to bottom right, rgb(171, 1, 171), rgb(2, 2, 176));
+}
+
 .indicator-container {
   display: flex;
   flex-direction: column;
@@ -160,20 +210,18 @@
   margin-bottom: 10px;
 }
 
-/* Sample container styling (smaller size) */
 .sample-container {
-  width: 90vw;
+  width: 70vw;
   height: 90vh;
   max-width: 1200px;
   max-height: 400px;
-  border: 5px solid grey;
+  border: 5px solid rgb(89, 89, 89);
   border-radius: 10px;
   padding: 0px;
   overflow: hidden;
   position: relative;
 }
 
-/* Question mark icon styling */
 .question-mark-icon {
   position: fixed;
   bottom: 20px;
@@ -186,7 +234,6 @@
   z-index: 1000;
 }
 
-/* Tooltip content styling */
 .tooltip-content {
   position: fixed;
   bottom: 70px;
@@ -201,4 +248,33 @@
   word-wrap: break-word;
   max-width: 700px;
   z-index: 1001;
+}
+
+.logo {
+  height: 50px;
+  margin-right: 10px;
+  border-radius: 10px;
+}
+
+.stock-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 5px;
+  margin-top: 5px;
+}
+
+.stock-info p {
+  margin: 0;
+  line-height: 1.;
+  font-size: 18px;
+}
+
+.stock-info .price {
+  color: #4caf50;
+  margin-left: 10px;
+}
+
+.stock-info .price.negative {
+  color: red;
 }

@@ -131,3 +131,43 @@ async def list_assets():
         return JSONResponse(content={"assets": assets_map})
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error reading assets file: {str(e)}")
+
+
+@app.get("/get_common_stocks")
+async def list_assets():
+    if not os.path.exists(constants.COMMON_STOCKS_FILE_PATH):
+        raise HTTPException(status_code=404, detail="Common stocks file not found")
+    
+    info = {}
+    with open(constants.COMMON_STOCKS_FILE_PATH, "r") as file:
+        for line in file:
+            symbol = line.strip()
+            if symbol:
+                ticker = yf.Ticker(symbol)
+                hist = ticker.history(period="2d")  # Get last 2 days of data
+                
+                if len(hist) >= 2:
+                    full_name = ticker.info.get("longName", "Name not found")[0:18]
+                    latest_price = hist["Close"].iloc[-1]
+                    prev_price = hist["Close"].iloc[-2]
+                    change = latest_price - prev_price
+                    change_percent = (change / prev_price) * 100
+                    positive = bool(change_percent >= 0)
+
+                    # Round values to 2 decimal places
+                    latest_price = round(latest_price, 2)
+                    change = round(change, 2)
+                    change_percent = round(change_percent, 2)
+
+                    info[symbol] = {
+                        'ticker': symbol,
+                        'full_name': full_name,
+                        'price': latest_price,
+                        'change': change, 
+                        'percent': change_percent, 
+                        'is_positive': positive
+                    }
+    
+    return JSONResponse(content={"common_stocks": info})
+
+
