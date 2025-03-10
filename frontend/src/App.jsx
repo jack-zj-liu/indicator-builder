@@ -6,6 +6,11 @@ import Rsi from './Rsi';
 import TripleEma from './TripleEma';
 import Awesome from './Awesome';
 import BollingerBands from './BollingerBands';
+import StochasticOscillator from './StochasticOscillator';
+import Ichimoku from './IchimokuCloud';
+import FibonacciRetracement from './FibonacciRetracement'
+import AroonIndicator from './Aroon';
+import FairGapValue from './FairGapValue';
 
 const App = () => {
   return (
@@ -17,6 +22,11 @@ const App = () => {
         <Route path="/tripleema" element={<TripleEma />} />
         <Route path="/awesome" element={<Awesome />} />
         <Route path="/bollingerbands" element={<BollingerBands />} />
+        <Route path="/stochasticoscillator" element={<StochasticOscillator />} />
+        <Route path="/ichimokucloud" element={<Ichimoku />} />
+        <Route path="/fibonacciretracement" element={<FibonacciRetracement />} />
+        <Route path="/aroonindicator" element={<AroonIndicator />} />
+        <Route path="/fairgapvalue" element={<FairGapValue />} />
       </Routes>
     </Router>
   );

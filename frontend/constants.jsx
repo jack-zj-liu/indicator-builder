@@ -6,3 +6,5 @@ export const GRAPH_PRICE_COLOR = '#ffffff';
 export const TOP_COLOR = '#021e5c';
 export const BOTTOM_COLOR = '#151515';
 
+export const GRAPH_AROON_UP_COLOR = 'rgba(0, 255, 0, 1)'; // Green for Aroon Up
+export const GRAPH_AROON_DOWN_COLOR = 'rgba(255, 0, 0, 1)'; // Red for Aroon Down

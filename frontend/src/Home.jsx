@@ -172,6 +172,11 @@ const Home = () => {
               <option value="TRIPLEEMA">Triple EMA</option>
               <option value="AWESOME">Awesome Oscillator</option>
               <option value="BOLLINGERBANDS">Bollinger Bands</option>
+              <option value="STOCHASTICOSCILLATOR">Stochastic Oscillator</option>
+              <option value="ICHIMOKUCLOUD">Ichimoku Cloud</option>
+              <option value="FIBONACCIRETRACEMENT">Fibonacci Retracement</option>
+              <option value="AROONINDICATOR">Aroon Indicator</option>
+              <option value="FAIRGAPVALUE">Fair Gap Value</option>
             </select>
             <select value={timeInterval} onChange={(e) => setTimeInterval(e.target.value)}>
               <option value="daily">Daily</option>
