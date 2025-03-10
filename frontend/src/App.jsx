@@ -11,6 +11,7 @@ import Ichimoku from './IchimokuCloud';
 import FibonacciRetracement from './FibonacciRetracement'
 import AroonIndicator from './Aroon';
 import FairGapValue from './FairGapValue';
+import Sma from './SMA';
 
 const App = () => {
   return (
@@ -19,6 +20,7 @@ const App = () => {
         <Route path="/" element={<Home />} />
         <Route path="/macd" element={<Macd />} />
         <Route path="/rsi" element={<Rsi />} />
+        <Route path="/sma" element={<Sma />} />
         <Route path="/tripleema" element={<TripleEma />} />
         <Route path="/awesome" element={<Awesome />} />
         <Route path="/bollingerbands" element={<BollingerBands />} />

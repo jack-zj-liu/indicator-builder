@@ -8,6 +8,9 @@ import "./Home.css";
 import "./App.css"; 
 
 const Home = () => {
+  useEffect(() => {
+    document.title = `IndicatorBuilder`;
+  }, []);
   const [stocks, setStocks] = useState([]);
   const [indicator, setIndicator] = useState("");
   const [asset, setAsset] = useState("SPY");
@@ -177,6 +180,7 @@ const Home = () => {
               <option value="FIBONACCIRETRACEMENT">Fibonacci Retracement</option>
               <option value="AROONINDICATOR">Aroon Indicator</option>
               <option value="FAIRGAPVALUE">Fair Gap Value</option>
+              <option value="SMA">Simple Moving Average</option>
             </select>
             <select value={timeInterval} onChange={(e) => setTimeInterval(e.target.value)}>
               <option value="daily">Daily</option>
