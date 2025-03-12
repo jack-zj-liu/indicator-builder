@@ -170,17 +170,21 @@ const Home = () => {
             <Autocomplete suggestions={assets} setValue={setAsset} />
             <select value={indicator} onChange={(e) => setIndicator(e.target.value)}>
               <option value="">Select Indicator</option>
-              <option value="MACD">MACD</option>
-              <option value="RSI">RSI</option>
-              <option value="TRIPLEEMA">Triple EMA</option>
-              <option value="AWESOME">Awesome Oscillator</option>
+              <option value="SMA">Simple Moving Average</option>
+              <option value="EMA">Exponential Moving Average</option>
+              <option value="STDDEV">Standard Deviation Indicator</option>
+              <option value="RSI">Relative Strength Index</option>
+              <option value="MACD">MA Convergence Divergence</option>
               <option value="BOLLINGERBANDS">Bollinger Bands</option>
+              <option value="AWESOME">Awesome Oscillator</option>
+              <option value="CCIOSCILLATOR">Commodity Channel Oscillator</option>
               <option value="STOCHASTICOSCILLATOR">Stochastic Oscillator</option>
+              <option value="TRIPLEEMA">Triple EMA</option>
+              <option value="AROONINDICATOR">Aroon Indicator</option>
               <option value="ICHIMOKUCLOUD">Ichimoku Cloud</option>
               <option value="FIBONACCIRETRACEMENT">Fibonacci Retracement</option>
-              <option value="AROONINDICATOR">Aroon Indicator</option>
               <option value="FAIRGAPVALUE">Fair Gap Value</option>
-              <option value="SMA">Simple Moving Average</option>
+              <option value="ADX">Average Directional Index</option>
             </select>
             <select value={timeInterval} onChange={(e) => setTimeInterval(e.target.value)}>
               <option value="daily">Daily</option>

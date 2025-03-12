@@ -10,7 +10,8 @@ const AroonIndicator = () => {
     document.title = `Aroon Indicator Chart`;
   }, []);
 
-  const chartContainerRef = useRef(null);
+  const chartContainerRef = useRef(null); // For price chart
+  const indicatorChartContainerRef = useRef(null); // For Aroon Indicator chart
   const chartInstance = useRef(null);
   const [priceData, setPriceData] = useState([]);
   const [aroonData, setAroonData] = useState([]);
@@ -78,14 +79,13 @@ const AroonIndicator = () => {
     const minPrice = Math.min(...priceData.map(d => d.value));
     const maxPrice = Math.max(...priceData.map(d => d.value));
 
-    // Calculate the scaling factor (1/3 of the price range)
-    const scalingFactor = (maxPrice - minPrice) / 3;
+    const scalingFactor = 100;
 
     // Scale the Aroon values
     return aroonData.map(d => ({
       time: d.time,
-      aroonUp: (d.aroonUp / 100) * scalingFactor + minPrice,
-      aroonDown: (d.aroonDown / 100) * scalingFactor + minPrice,
+      aroonUp: (d.aroonUp / 100) * scalingFactor,
+      aroonDown: (d.aroonDown / 100) * scalingFactor,
     }));
   };
 
@@ -99,13 +99,11 @@ const AroonIndicator = () => {
   useEffect(() => {
     if (aroonData.length === 0 || priceData.length === 0) return;
 
-    const container = chartContainerRef.current;
-    const chartWidth = container.clientWidth;
-    const chartHeight = container.clientHeight;
-
-    const chart = createChart(container, {
-      width: chartWidth,
-      height: chartHeight,
+    // Price chart setup
+    const priceContainer = chartContainerRef.current;
+    const priceChart = createChart(priceContainer, {
+      width: priceContainer.clientWidth,
+      height: priceContainer.clientHeight,
       layout: {
         textColor: Constants.GRAPH_TEXT_COLOR,
         background: {
@@ -115,12 +113,27 @@ const AroonIndicator = () => {
         }
       },
     });
-    chartInstance.current = chart;
+    chartInstance.current = priceChart;
 
     // Add price series
     const sortedPriceData = [...priceData].sort((a, b) => a.time - b.time);
-    const priceSeries = chart.addLineSeries({ color: Constants.GRAPH_PRICE_COLOR });
+    const priceSeries = priceChart.addLineSeries({ color: Constants.GRAPH_PRICE_COLOR });
     priceSeries.setData(sortedPriceData);
+
+    // Aroon chart setup
+    const indicatorContainer = indicatorChartContainerRef.current;
+    const indicatorChart = createChart(indicatorContainer, {
+      width: indicatorContainer.clientWidth,
+      height: indicatorContainer.clientHeight,
+      layout: {
+        textColor: Constants.GRAPH_TEXT_COLOR,
+        background: {
+          type: ColorType.VerticalGradient,
+          topColor: Constants.BOTTOM_COLOR,
+          bottomColor: Constants.BOTTOM_COLOR  // Same color for the bottom chart background
+        }
+      },
+    });
 
     // Scale Aroon data relative to price
     const scaledAroonData = scaleAroonData(aroonData, priceData);
@@ -128,13 +141,13 @@ const AroonIndicator = () => {
     // Add Aroon Up and Aroon Down series
     const sortedAroonData = [...scaledAroonData].sort((a, b) => a.time - b.time);
 
-    const aroonUpSeries = chart.addLineSeries({ 
+    const aroonUpSeries = indicatorChart.addLineSeries({ 
       color: Constants.GRAPH_AROON_UP_COLOR, 
       lineWidth: 2 
     });
     aroonUpSeries.setData(sortedAroonData.map(d => ({ time: d.time, value: d.aroonUp })));
 
-    const aroonDownSeries = chart.addLineSeries({ 
+    const aroonDownSeries = indicatorChart.addLineSeries({ 
       color: Constants.GRAPH_AROON_DOWN_COLOR, 
       lineWidth: 2 
     });
@@ -143,14 +156,16 @@ const AroonIndicator = () => {
     const handleResize = () => {
       const width = window.innerWidth * 0.8;
       const height = window.innerHeight * 0.6;
-      chart.resize(width, height);
+      priceChart.resize(width, height);
+      indicatorChart.resize(width, height);
     };
 
     window.addEventListener('resize', handleResize);
 
     return () => {
       window.removeEventListener('resize', handleResize);
-      chart.remove();
+      priceChart.remove();
+      indicatorChart.remove();
     };
   }, [aroonData, priceData]);
 
@@ -160,7 +175,11 @@ const AroonIndicator = () => {
       <h2 className="indicator-title">
         {asset}: Aroon Indicator - {timeInterval.toUpperCase()}
       </h2>
-      <div className="chart-container" ref={chartContainerRef} />
+      {/* Price chart container */}
+      <div className="price-chart-container" ref={chartContainerRef} />
+
+      {/* Aroon Indicator chart container */}
+      <div className="indicator-chart-container" ref={indicatorChartContainerRef} />
 
       {/* Tooltip Question Mark */}
       <div
@@ -174,32 +193,32 @@ const AroonIndicator = () => {
       {/* Tooltip Content */}
       {isHovered && (
         <div className="tooltip-content">
-            <strong>Aroon Indicator: A Trend Strength Tool</strong><br /><br />
-            
-            The Aroon Indicator is used to identify the strength of a trend and potential trend changes. It consists of two lines: Aroon Up and Aroon Down. Aroon Up measures the strength of the uptrend, while Aroon Down measures the strength of the downtrend.<br /><br />
-            
-            <strong>How It Works:</strong><br />
-            - Aroon Up: Measures the time since the highest price within the period.<br />
-            - Aroon Down: Measures the time since the lowest price within the period.<br />
-            - The indicator is on a scale from 0% to 100%. Values above 70 indicate a strong trend, while values below 30 indicate a weak trend.<br /><br />
-            
-            <strong>Interpreting Aroon:</strong>
-            <ul>
-                <li><span style={{ color: Constants.GRAPH_AROON_UP_COLOR }}>Aroon Up &gt; 70</span>: Strong uptrend.</li>
-                <li><span style={{ color: Constants.GRAPH_AROON_DOWN_COLOR }}>Aroon Down &gt; 70</span>: Strong downtrend.</li>
-                <li><span>Aroon Up & Aroon Down &lt; 30</span>: Consolidation or weak trend.</li>
-                <li><span>Aroon Up crosses above Aroon Down</span>: Potential uptrend.</li>
-                <li><span>Aroon Down crosses above Aroon Up</span>: Potential downtrend.</li>
-            </ul>
+          <strong>Aroon Indicator: A Trend Strength Tool</strong><br /><br />
+          
+          The Aroon Indicator is used to identify the strength of a trend and potential trend changes. It consists of two lines: Aroon Up and Aroon Down. Aroon Up measures the strength of the uptrend, while Aroon Down measures the strength of the downtrend.<br /><br />
+          
+          <strong>How It Works:</strong><br />
+          - Aroon Up: Measures the time since the highest price within the period.<br />
+          - Aroon Down: Measures the time since the lowest price within the period.<br />
+          - The indicator is on a scale from 0% to 100%. Values above 70 indicate a strong trend, while values below 30 indicate a weak trend.<br /><br />
+          
+          <strong>Interpreting Aroon:</strong>
+          <ul>
+              <li><span style={{ color: Constants.GRAPH_AROON_UP_COLOR }}>Aroon Up &gt; 70</span>: Strong uptrend.</li>
+              <li><span style={{ color: Constants.GRAPH_AROON_DOWN_COLOR }}>Aroon Down &gt; 70</span>: Strong downtrend.</li>
+              <li><span>Aroon Up & Aroon Down &lt; 30</span>: Consolidation or weak trend.</li>
+              <li><span>Aroon Up crosses above Aroon Down</span>: Potential uptrend.</li>
+              <li><span>Aroon Down crosses above Aroon Up</span>: Potential downtrend.</li>
+          </ul>
 
-            <strong>Trading Strategy:</strong><br />
-            - Buy Signal: Aroon Up crosses above Aroon Down and both are above 50.<br />
-            - Sell Signal: Aroon Down crosses above Aroon Up and both are above 50.<br />
-            - Trend Confirmation: Use Aroon in conjunction with other indicators like Moving Averages or RSI.<br /><br />
+          <strong>Trading Strategy:</strong><br />
+          - Buy Signal: Aroon Up crosses above Aroon Down and both are above 50.<br />
+          - Sell Signal: Aroon Down crosses above Aroon Up and both are above 50.<br />
+          - Trend Confirmation: Use Aroon in conjunction with other indicators like Moving Averages or RSI.<br /><br />
 
-            Use the Aroon Indicator to gauge trend strength and potential reversals, but always confirm with other technical tools!
+          Use the Aroon Indicator to gauge trend strength and potential reversals, but always confirm with other technical tools!
         </div>
-        )}
+      )}
     </div>
   );
 };

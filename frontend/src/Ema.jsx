@@ -6,9 +6,9 @@ import { CloudBackGround } from './VantaComponents';
 import * as Constants from '../constants';
 import './Indicator.css';
 
-const Sma = () => {
+const Ema = () => {
   useEffect(() => {
-    document.title = `SMA Chart`;
+    document.title = `EMA Chart`;
   }, []);
 
   const chartContainerRef = useRef(null);
@@ -29,14 +29,21 @@ const Sma = () => {
     getQueryParams();
   }, [location.search]);
 
-  const calculateSMA = (data, period) => {
-    let smaArray = [];
-    for (let i = period - 1; i < data.length; i++) {
-      const sum = data.slice(i - period + 1, i + 1).reduce((acc, val) => acc + val.value, 0);
-      const sma = sum / period;
-      smaArray.push({ time: data[i].time, value: sma });
+  const calculateEMA = (data, period) => {
+    if (data.length === 0) return [];
+    
+    const emaArray = [];
+    const multiplier = 2 / (period + 1);
+    let ema = data[0].value;
+
+    emaArray.push({ time: data[0].time, value: ema });
+    
+    for (let i = 1; i < data.length; i++) {
+      ema = (data[i].value - ema) * multiplier + ema;
+      emaArray.push({ time: data[i].time, value: ema });
     }
-    return smaArray;
+
+    return emaArray;
   };
 
   useEffect(() => {
@@ -73,10 +80,10 @@ const Sma = () => {
     const priceSeries = chart.addLineSeries({ color: Constants.GRAPH_PRICE_COLOR });
     priceSeries.setData(priceData);
 
-    const smaPeriod = 14;
-    const smaValues = calculateSMA(priceData, smaPeriod);
-    const smaSeries = chart.addLineSeries({ color: 'yellow', lineWidth: 3 });
-    smaSeries.setData(smaValues);
+    const emaPeriod = 14;
+    const emaValues = calculateEMA(priceData, emaPeriod);
+    const emaSeries = chart.addLineSeries({ color: 'yellow', lineWidth: 3 });
+    emaSeries.setData(emaValues);
 
     const handleResize = () => {
       chart.resize(container.clientWidth, container.clientHeight);
@@ -94,7 +101,7 @@ const Sma = () => {
   return (
     <div className="indicator-container">
       <CloudBackGround/>
-      <h2 className="indicator-title">{asset}: Simple Moving Average - {timeInterval.toUpperCase()}</h2>
+      <h2 className="indicator-title">{asset}: Exponential Moving Average - {timeInterval.toUpperCase()}</h2>
       <div className="chart-container" ref={chartContainerRef} />
 
       <div className="question-mark-icon" onMouseEnter={() => setIsHovered(true)} onMouseLeave={() => setIsHovered(false)}>?</div>
@@ -102,17 +109,17 @@ const Sma = () => {
       {isHovered && (
         <MathJaxContext>
           <div className="tooltip-content formatted-tooltip">
-            The Simple Moving Average (SMA) is one of the most fundamental technical indicators in financial markets. It helps traders and analysts smooth out price data over a specific period, making it easier to identify trends. Unlike more complex moving averages, such as the Exponential Moving Average (EMA), the SMA applies equal weight to all data points, providing a straightforward way to analyze historical price movements.<br/><br/>
-            The SMA is calculated by summing the closing prices over a chosen period and dividing by the number of periods. The formula is:<br/><br/>
+            The Exponential Moving Average (EMA) is a widely used technical indicator in financial markets. Unlike the Simple Moving Average (SMA), EMA gives greater weight to recent prices, making it more responsive to price changes.<br/><br/>
+            The EMA is calculated using the following formula:<br/><br/>
             <MathJax>
-              {`\\( SMA = \\frac{\\sum_{i=0}^{N-1} P_i}{N} \\)`}
+                {`\\( EMA_t = P_t \\times \\alpha + EMA_{t-1} \\times (1 - \\alpha) \\)`}
             </MathJax>
             <br/>
             <MathJax>
-              {`where \\( P_i \\) represents the price at period \\( i \\), and \\( N \\) is the number of periods used in the calculation.`}
+                {`where \\( P_t \\) represents the price at time \\( t \\), \\( \\alpha = \\frac{2}{N+1} \\) is the smoothing factor, and \\( N \\) is the number of periods.`}
             </MathJax>
             <br/>
-            Traders use SMA for various purposes, including trend identification, support and resistance levels, and trading signals. A rising SMA suggests a bullish trend, while a declining SMA indicates a bearish trend. When a short-term SMA crosses above a long-term SMA, it can signal a potential buying opportunity, while the opposite crossover may suggest a sell signal.
+            Traders use EMA for identifying trends, support/resistance levels, and trading signals. A rising EMA suggests a bullish trend, while a declining EMA suggests a bearish trend. Crossovers between short-term and long-term EMAs are often used as trade signals.
           </div>
         </MathJaxContext>
       )}
@@ -120,4 +127,4 @@ const Sma = () => {
   );
 };
 
-export default Sma;
+export default Ema;

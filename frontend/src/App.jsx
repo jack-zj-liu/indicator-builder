@@ -12,6 +12,10 @@ import FibonacciRetracement from './FibonacciRetracement'
 import AroonIndicator from './Aroon';
 import FairGapValue from './FairGapValue';
 import Sma from './SMA';
+import Ema from './Ema';
+import Adx from './Adx';
+import StdDev from './StandardDeviation';
+import CciOscillator from './CciOscillator';
 
 const App = () => {
   return (
@@ -21,9 +25,13 @@ const App = () => {
         <Route path="/macd" element={<Macd />} />
         <Route path="/rsi" element={<Rsi />} />
         <Route path="/sma" element={<Sma />} />
+        <Route path="/ema" element={<Ema />} />
+        <Route path="/adx" element={<Adx />} />
         <Route path="/tripleema" element={<TripleEma />} />
+        <Route path="/stddev" element={<StdDev />} />
         <Route path="/awesome" element={<Awesome />} />
         <Route path="/bollingerbands" element={<BollingerBands />} />
+        <Route path="/ccioscillator" element={<CciOscillator />} />
         <Route path="/stochasticoscillator" element={<StochasticOscillator />} />
         <Route path="/ichimokucloud" element={<Ichimoku />} />
         <Route path="/fibonacciretracement" element={<FibonacciRetracement />} />

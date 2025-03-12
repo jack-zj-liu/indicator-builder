@@ -36,6 +36,31 @@ body {
   position: relative;
 }
 
+.price-chart-container {
+  width: 95vw;
+  height: 55vh;
+  max-width: 1700px;
+  max-height: 800px;
+  border: 6px solid grey;
+  border-radius: 10px;
+  padding: 0px;
+  overflow: hidden;
+  position: relative;
+}
+
+.indicator-chart-container {
+  width: 95vw;
+  height: 25vh;
+  max-width: 1700px;
+  max-height: 800px;
+  border: 6px solid grey;
+  border-radius: 10px;
+  padding: 0px;
+  overflow: hidden;
+  position: relative;
+}
+
+
 .question-mark-icon {
   position: fixed;
   bottom: 20px;

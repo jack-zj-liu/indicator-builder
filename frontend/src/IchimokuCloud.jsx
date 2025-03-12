@@ -15,7 +15,7 @@ const Ichimoku = () => {
   const [priceData, setPriceData] = useState([]);
   const [asset, setAsset] = useState('');
   const [timeInterval, setTimeInterval] = useState('');
-  const [isHovered, setIsHovered] = useState(false);  // Add this line to initialize the state
+  const [isHovered, setIsHovered] = useState(false);
 
   const location = useLocation();
 
@@ -31,7 +31,6 @@ const Ichimoku = () => {
     getQueryParams();
   }, [location.search]);
 
-  // Ichimoku Cloud Calculation
   const calculateIchimoku = (data) => {
     const tenkan = []; // Conversion Line
     const kijun = [];  // Base Line
@@ -89,7 +88,8 @@ const Ichimoku = () => {
 
           // Ensure the data is sorted by time in ascending order
           formattedData.sort((a, b) => a.time - b.time);
-
+          
+          // Set the data in state
           setPriceData(formattedData);
         } catch (error) {
           console.error('Error fetching data:', error);

@@ -10,8 +10,10 @@ const FairGapValue = () => {
     document.title = `Fair Gap Value Chart`;
   }, []);
 
-  const chartContainerRef = useRef(null);
+  const chartContainerRef = useRef(null); // Price chart container
+  const gapChartContainerRef = useRef(null); // Fair Gap Value chart container
   const chartInstance = useRef(null);
+  const gapChartInstance = useRef(null);
   const [priceData, setPriceData] = useState([]);
   const [asset, setAsset] = useState('');
   const [timeInterval, setTimeInterval] = useState('');
@@ -79,13 +81,13 @@ const FairGapValue = () => {
   useEffect(() => {
     if (priceData.length === 0) return;
 
-    const container = chartContainerRef.current;
-    const chartWidth = container.clientWidth;
-    const chartHeight = container.clientHeight;
+    const priceContainer = chartContainerRef.current;
+    const gapContainer = gapChartContainerRef.current;
 
-    const chart = createChart(container, {
-      width: chartWidth,
-      height: chartHeight,
+    // Price Chart
+    const priceChart = createChart(priceContainer, {
+      width: priceContainer.clientWidth,
+      height: priceContainer.clientHeight,
       layout: {
         textColor: Constants.GRAPH_TEXT_COLOR,
         background: {
@@ -95,11 +97,26 @@ const FairGapValue = () => {
         },
       },
     });
-    chartInstance.current = chart;
+    chartInstance.current = priceChart;
 
     const sortedPriceData = [...priceData].sort((a, b) => a.time - b.time);
-    const priceSeries = chart.addLineSeries({ color: Constants.GRAPH_PRICE_COLOR });
+    const priceSeries = priceChart.addLineSeries({ color: Constants.GRAPH_PRICE_COLOR });
     priceSeries.setData(sortedPriceData);
+
+    // Fair Gap Value Chart
+    const gapChart = createChart(gapContainer, {
+      width: gapContainer.clientWidth,
+      height: gapContainer.clientHeight,
+      layout: {
+        textColor: Constants.GRAPH_TEXT_COLOR,
+        background: {
+          type: ColorType.VerticalGradient,
+          topColor: Constants.BOTTOM_COLOR,
+          bottomColor: Constants.BOTTOM_COLOR,
+        },
+      },
+    });
+    gapChartInstance.current = gapChart;
 
     const gaps = calculateFairGap(sortedPriceData);
 
@@ -113,25 +130,28 @@ const FairGapValue = () => {
       };
     });
 
-    // Create a custom series for the fair gap line
-    const gapSeries = chart.addLineSeries({
+    const gapSeries = gapChart.addLineSeries({
       lineWidth: 2,
     });
 
-    // To simulate color changes, we will set up a custom line rendering process
     gapSeries.setData(gapSeriesData);
 
     const handleResize = () => {
-      const width = window.innerWidth * 0.8;
-      const height = window.innerHeight * 0.6;
-      chart.resize(width, height);
+      const priceWidth = priceContainer.clientWidth;
+      const priceHeight = priceContainer.clientHeight;
+      priceChart.resize(priceWidth, priceHeight);
+
+      const gapWidth = gapContainer.clientWidth;
+      const gapHeight = gapContainer.clientHeight;
+      gapChart.resize(gapWidth, gapHeight);
     };
 
     window.addEventListener('resize', handleResize);
 
     return () => {
       window.removeEventListener('resize', handleResize);
-      chart.remove();
+      priceChart.remove();
+      gapChart.remove();
     };
   }, [priceData]);
 
@@ -141,7 +161,8 @@ const FairGapValue = () => {
       <h2 className="indicator-title">
         {asset}: Fair Gap Value - {timeInterval.toUpperCase()}
       </h2>
-      <div className="chart-container" ref={chartContainerRef} />
+      <div className="price-chart-container" ref={chartContainerRef} /> {/* Price Chart */}
+      <div className="indicator-chart-container" ref={gapChartContainerRef} /> {/* Fair Gap Value Chart */}
 
       {/* Tooltip Question Mark */}
       <div
@@ -155,10 +176,7 @@ const FairGapValue = () => {
       {/* Tooltip Content */}
       {isHovered && (
         <div className="tooltip-content">
-          <strong>Fair Gap Value: A Trading Insight</strong><br /><br />
           The Fair Gap Value indicator identifies the difference in price between consecutive data points, such as the current and previous prices. This gap can indicate significant movements in the asset price, which might be used for identifying potential reversals or trends.<br /><br />
-
-          <strong>How It Works:</strong><br />
           The Fair Gap Value is calculated as the difference between the current price and the previous price. A large gap can suggest a change in the market sentiment, while a small gap may indicate stability.<br /><br />
 
           <strong>Gap Analysis:</strong>
@@ -168,11 +186,9 @@ const FairGapValue = () => {
           </ul>
 
           <strong>Trading Strategy:</strong><br />
-          - Buy Signal: If a large negative gap occurs, consider it as a potential buying opportunity (reversal).<br />
-          - Sell Signal: If a large positive gap occurs, consider it as a potential selling opportunity (reversal).<br />
-          - Stop-Loss Placement: Traders may use the gap as a reference for placing stop-loss orders.<br /><br />
-
-          Remember to combine the Fair Gap Value with other technical indicators for more accurate predictions.
+          Buy Signal: If a large negative gap occurs, consider it as a potential buying opportunity (reversal).<br />
+          Sell Signal: If a large positive gap occurs, consider it as a potential selling opportunity (reversal).<br />
+          Stop-Loss Placement: Traders may use the gap as a reference for placing stop-loss orders.
         </div>
       )}
     </div>
