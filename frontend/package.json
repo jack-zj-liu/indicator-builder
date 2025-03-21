@@ -10,7 +10,13 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@emotion/react": "^11.14.0",
+    "@emotion/styled": "^11.14.0",
+    "@mui/icons-material": "^6.4.8",
+    "@mui/material": "^6.4.8",
+    "@mui/x-date-pickers": "^7.28.0",
     "better-react-mathjax": "^2.1.0",
+    "dayjs": "^1.11.13",
     "lightweight-charts": "^4.2.2",
     "mathjax": "^3.2.2",
     "mathjax-react": "^2.0.1",

@@ -3,6 +3,7 @@ import { createChart, ColorType } from 'lightweight-charts';
 import { MathJax, MathJaxContext } from "better-react-mathjax";
 import { useLocation } from 'react-router-dom';
 import { CloudBackGround } from './VantaComponents';
+import Backtest from './Backtest'
 import * as Constants from '../constants';
 import './Indicator.css';
 
@@ -92,30 +93,34 @@ const Sma = () => {
   const [isHovered, setIsHovered] = useState(false);
 
   return (
-    <div className="indicator-container">
-      <CloudBackGround/>
-      <h2 className="indicator-title">{asset}: Simple Moving Average - {timeInterval.toUpperCase()}</h2>
-      <div className="chart-container" ref={chartContainerRef} />
+    <div className="tile-container">
+      <div className="indicator-container">
+        <CloudBackGround/>
+        <h2 className="indicator-title">{asset}: Simple Moving Average - {timeInterval.toUpperCase()}</h2>
+        <div className="chart-container" ref={chartContainerRef} />
 
-      <div className="question-mark-icon" onMouseEnter={() => setIsHovered(true)} onMouseLeave={() => setIsHovered(false)}>?</div>
+        <div className="question-mark-icon" onMouseEnter={() => setIsHovered(true)} onMouseLeave={() => setIsHovered(false)}>?</div>
 
-      {isHovered && (
-        <MathJaxContext>
-          <div className="tooltip-content formatted-tooltip">
-            The Simple Moving Average (SMA) is one of the most fundamental technical indicators in financial markets. It helps traders and analysts smooth out price data over a specific period, making it easier to identify trends. Unlike more complex moving averages, such as the Exponential Moving Average (EMA), the SMA applies equal weight to all data points, providing a straightforward way to analyze historical price movements.<br/><br/>
-            The SMA is calculated by summing the closing prices over a chosen period and dividing by the number of periods. The formula is:<br/><br/>
-            <MathJax>
-              {`\\( SMA = \\frac{\\sum_{i=0}^{N-1} P_i}{N} \\)`}
-            </MathJax>
-            <br/>
-            <MathJax>
-              {`where \\( P_i \\) represents the price at period \\( i \\), and \\( N \\) is the number of periods used in the calculation.`}
-            </MathJax>
-            <br/>
-            Traders use SMA for various purposes, including trend identification, support and resistance levels, and trading signals. A rising SMA suggests a bullish trend, while a declining SMA indicates a bearish trend. When a short-term SMA crosses above a long-term SMA, it can signal a potential buying opportunity, while the opposite crossover may suggest a sell signal.
-          </div>
-        </MathJaxContext>
-      )}
+        {isHovered && (
+          <MathJaxContext>
+            <div className="tooltip-content formatted-tooltip">
+              The Simple Moving Average (SMA) is one of the most fundamental technical indicators in financial markets. It helps traders and analysts smooth out price data over a specific period, making it easier to identify trends. Unlike more complex moving averages, such as the Exponential Moving Average (EMA), the SMA applies equal weight to all data points, providing a straightforward way to analyze historical price movements.<br/><br/>
+              The SMA is calculated by summing the closing prices over a chosen period and dividing by the number of periods. The formula is:<br/><br/>
+              <MathJax>
+                {`\\( SMA = \\frac{\\sum_{i=0}^{N-1} P_i}{N} \\)`}
+              </MathJax>
+              <br/>
+              <MathJax>
+                {`where \\( P_i \\) represents the price at period \\( i \\), and \\( N \\) is the number of periods used in the calculation.`}
+              </MathJax>
+              <br/>
+              Traders use SMA for various purposes, including trend identification, support and resistance levels, and trading signals. A rising SMA suggests a bullish trend, while a declining SMA indicates a bearish trend. When a short-term SMA crosses above a long-term SMA, it can signal a potential buying opportunity, while the opposite crossover may suggest a sell signal.
+            </div>
+          </MathJaxContext>
+        )}
+      </div>
+      <h2 className="strategy-header">SMA Crossover Strategy: Backtesting</h2>
+      <Backtest type={"SMA"} asset={asset} />
     </div>
   );
 };

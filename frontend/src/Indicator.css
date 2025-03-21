@@ -87,3 +87,12 @@ body {
   max-width: 700px;
   z-index: 1001;
 }
+
+.strategy-header {
+  text-align: center;
+  margin: 20px 0;
+  padding: 10px 0;
+  border-top: 2px solid #aaaaaa;
+  border-bottom: 2px solid #aaaaaa;
+  font-size: 30px;
+}
