@@ -120,7 +120,7 @@ const TripleEma = () => {
     <div className="indicator-container">
       <CloudBackGround/>
       <h2 className="indicator-title">
-        {asset}: Triplke Exponential Moving Average - {timeInterval.toUpperCase()}
+        {asset}: Triple Exponential Moving Average - {timeInterval.toUpperCase()}
       </h2>
       <div className="chart-container" ref={chartContainerRef} />
       
