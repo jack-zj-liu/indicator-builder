@@ -9759,3 +9759,12 @@ ZWS: Zurn Elkay Water Solutions Corp
 ZYBT: Zhengye Biotechnology Holding Ltd
 ZYME: Zymeworks Inc.
 ZYXI: ZYNEX INC
+BTC-USD: Bitcoin USD
+ETH-USD: Ethereum USD
+XRP-USD: Ripple USD
+SOL-USD: Solana USD
+BNB-USD: Binance coin USD
+DOGE-USD: Dogecoin USD
+ADA-USD: Cardano USD
+SHIB-USD: Shiba Inu USD
+LINK-USD: Link USD

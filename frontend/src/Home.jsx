@@ -185,6 +185,7 @@ const Home = () => {
               <option value="FIBONACCIRETRACEMENT">Fibonacci Retracement</option>
               <option value="FAIRGAPVALUE">Fair Gap Value</option>
               <option value="ADX">Average Directional Index</option>
+              <option value="EMA-BB">EMA + BollingerBands</option>
             </select>
             <select value={timeInterval} onChange={(e) => setTimeInterval(e.target.value)}>
               <option value="daily">Daily</option>

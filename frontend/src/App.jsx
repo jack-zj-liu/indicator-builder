@@ -16,6 +16,7 @@ import Ema from './Ema';
 import Adx from './Adx';
 import StdDev from './StandardDeviation';
 import CciOscillator from './CciOscillator';
+import EMA_BB from './EMA+BollingerBands';
 
 const App = () => {
   return (
@@ -37,6 +38,7 @@ const App = () => {
         <Route path="/fibonacciretracement" element={<FibonacciRetracement />} />
         <Route path="/aroonindicator" element={<AroonIndicator />} />
         <Route path="/fairgapvalue" element={<FairGapValue />} />
+        <Route path="/ema-bb" element={<EMA_BB />} />
       </Routes>
     </Router>
   );
