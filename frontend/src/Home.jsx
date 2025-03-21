@@ -186,6 +186,7 @@ const Home = () => {
               <option value="FAIRGAPVALUE">Fair Gap Value</option>
               <option value="ADX">Average Directional Index</option>
               <option value="EMA-BB">EMA + BollingerBands</option>
+              <option value="MACD-AWESOMEOSCILLATOR">MACD + Awesome Oscillator</option>
             </select>
             <select value={timeInterval} onChange={(e) => setTimeInterval(e.target.value)}>
               <option value="daily">Daily</option>

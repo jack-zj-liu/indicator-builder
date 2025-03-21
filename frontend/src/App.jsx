@@ -17,6 +17,7 @@ import Adx from './Adx';
 import StdDev from './StandardDeviation';
 import CciOscillator from './CciOscillator';
 import EMA_BB from './EMA+BollingerBands';
+import MACD_AwesomeOscillator from './MACD+AwesomeOscillator';
 
 const App = () => {
   return (
@@ -39,6 +40,7 @@ const App = () => {
         <Route path="/aroonindicator" element={<AroonIndicator />} />
         <Route path="/fairgapvalue" element={<FairGapValue />} />
         <Route path="/ema-bb" element={<EMA_BB />} />
+        <Route path="/macd-awesomeoscillator" element={<MACD_AwesomeOscillator />} />
       </Routes>
     </Router>
   );
