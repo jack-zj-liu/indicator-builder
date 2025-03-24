@@ -10,7 +10,7 @@ import logging
 import uvicorn
 import json
 
-from backtest import Backtest, SmaCross
+from backtest import Backtest, SmaCross, SmaPullbackStrategy
 
 import constants
 try:
@@ -94,13 +94,27 @@ def get_backtest_data(symbol):
     return data
 
 
-@app.get("/backtest/SMA/{symbol}")
+@app.get("/backtest/SMA_crossover/{symbol}")
 async def get_backtest_results(symbol: str, start_date: str, end_date: str, short: int, long: int, commission: float):
     data = get_backtest_data(symbol)
     filtered_data = data[(data.index >= start_date) & (data.index <= end_date)]
     bt = Backtest(filtered_data, SmaCross, commission=commission)
     bt.run(n1=short, n2=long)
     fname = f'SmaCross-{symbol}.html'
+    bt.plot(filename=fname, plot_volume=False, superimpose=False, open_browser=False)
+    HtmlFile = open(fname, 'r', encoding='utf-8')
+    plot = HtmlFile.read()
+    HtmlFile.close()
+    os.remove(fname)
+    return HTMLResponse(content=plot)
+
+@app.get("/backtest/SMA_pullback/{symbol}")
+async def get_backtest_results(symbol: str, start_date: str, end_date: str, short: int, long: int, commission: float):
+    data = get_backtest_data(symbol)
+    filtered_data = data[(data.index >= start_date) & (data.index <= end_date)]
+    bt = Backtest(filtered_data, SmaPullbackStrategy, commission=commission)
+    bt.run(n1=short, n2=long)
+    fname = f'SmaPullbackStrategy-{symbol}.html'
     bt.plot(filename=fname, plot_volume=False, superimpose=False, open_browser=False)
     HtmlFile = open(fname, 'r', encoding='utf-8')
     plot = HtmlFile.read()
