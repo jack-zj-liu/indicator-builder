@@ -158,7 +158,7 @@ const Adx = () => {
 
   return (
     <div className="indicator-container">
-      <CloudBackGround />
+      {/* <CloudBackGround/> */}
       <h2 className="indicator-title">{asset}: Average Directional Index - {timeInterval.toUpperCase()}</h2>
       
       {/* Price chart container */}

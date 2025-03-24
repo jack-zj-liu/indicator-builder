@@ -171,7 +171,7 @@ const MACD_AwesomeOscillator = () => {
 
   return (
     <div className="indicator-container">
-      <CloudBackGround />
+      {/* <CloudBackGround/> */}
       <h2 className="indicator-title">
         {asset}: Moving Average Convergence Divergence + Awesome Oscillator - {timeInterval.toUpperCase()}
       </h2>

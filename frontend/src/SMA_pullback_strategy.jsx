@@ -95,7 +95,7 @@ const SMA_pullback_strategy = () => {
   return (
     <div className="tile-container">
       <div className="indicator-container">
-        <CloudBackGround/>
+        {/* <CloudBackGround/> */}
         <h2 className="indicator-title">{asset}: Simple Moving Average - {timeInterval.toUpperCase()}</h2>
         <div className="short-chart-container" ref={chartContainerRef} />
 

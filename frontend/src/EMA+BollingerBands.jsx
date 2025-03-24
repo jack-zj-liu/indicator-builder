@@ -151,7 +151,7 @@ const EMA_BB = () => {
 
   return (
     <div className="indicator-container">
-      <CloudBackGround/>
+      {/* <CloudBackGround/> */}
       <h2 className="indicator-title">
         {asset}: EMA + Bollinger Bands - {timeInterval.toUpperCase()}
       </h2>

@@ -142,7 +142,7 @@ const FibonacciRetracement = () => {
 
   return (
     <div className="indicator-container">
-      <CloudBackGround />
+      {/* <CloudBackGround/> */}
       <h2 className="indicator-title">
         {asset}: Fibonacci Retracement - {timeInterval.toUpperCase()}
       </h2>

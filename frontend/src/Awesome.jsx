@@ -126,7 +126,7 @@ const Awesome = () => {
   
     return (
       <div className="indicator-container">
-        <CloudBackGround/>
+        {/* <CloudBackGround/> */}
         <h2 className="indicator-title">
           {asset}: Awesome Oscillator - {timeInterval.toUpperCase()}
         </h2>

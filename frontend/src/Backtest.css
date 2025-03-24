@@ -31,9 +31,9 @@ body {
 
 .backtest-results-iframe {
     position: relative;
-    height: 77vh;
+    height: 635px;
     width: 100%;
-    /* padding-top: 1vh; */
+    padding-top: 5px;
     border: none;
     overflow: hidden;
 }

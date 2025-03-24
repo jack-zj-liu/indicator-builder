@@ -100,7 +100,7 @@ const Ema = () => {
 
   return (
     <div className="indicator-container">
-      <CloudBackGround/>
+      {/* <CloudBackGround/> */}
       <h2 className="indicator-title">{asset}: Exponential Moving Average - {timeInterval.toUpperCase()}</h2>
       <div className="chart-container" ref={chartContainerRef} />
 

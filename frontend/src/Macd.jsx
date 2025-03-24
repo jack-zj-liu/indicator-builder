@@ -129,7 +129,7 @@ const Macd = () => {
 
   return (
     <div className="indicator-container">
-      <CloudBackGround />
+      {/* <CloudBackGround/> */}
       <h2 className="indicator-title">
         {asset}: Moving Average Convergence Divergence - {timeInterval.toUpperCase()}
       </h2>

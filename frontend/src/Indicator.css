@@ -4,6 +4,8 @@ body {
   align-items: center; /* Centers vertically */
   min-height: 100vh; /* Ensures the body takes at least the full viewport height */
   margin: 0; /* Removes default margin */
+  background-image: url(assets/clouds.png);
+  background-attachment: fixed;
 }
 
 .indicator-container {
