@@ -1,14 +1,13 @@
 from fastapi import BackgroundTasks, FastAPI, HTTPException
 from fastapi.responses import JSONResponse, HTMLResponse
 import requests
-from datetime import datetime, timedelta
+from datetime import datetime, timezone
 from fastapi.middleware.cors import CORSMiddleware
 import yfinance as yf
 import pandas as pd
 import os
 import logging
 import uvicorn
-import json
 
 from backtest import Backtest, SmaCross, SmaPullbackStrategy
 
@@ -41,10 +40,12 @@ async def root():
 
 
 def insert_redis_data(redis_name, data):
-    # serialize each dict as a string and insert into redis
-    redis_entry = data
-    r.rpush(redis_name, redis_entry)
-    r.expire(redis_name, REDIS_EXPIRY)
+    if r.exists(redis_name) == 0:
+        # serialize each dict as a string and insert into redis
+        redis_entry = data
+        r.rpush(redis_name, redis_entry)
+        r.expire(redis_name, REDIS_EXPIRY)
+        LOG.info(f"Inserted {redis_name} into redis")
 
 def get_series_data_redis(symbol, interval, background_tasks: BackgroundTasks):
     ticker = yf.Ticker(symbol)
@@ -58,7 +59,7 @@ def get_series_data_redis(symbol, interval, background_tasks: BackgroundTasks):
             {"time": pd.Timestamp(date).strftime('%Y-%m-%d'), "value": round(value, 2)}
             for date, value in data.items()
         ]
-        formatted_data = list(map(json.loads, r.lrange(redis_name, 0, -1)))
+        LOG.info(f"Retrieved {redis_name} from redis")
     else:
         data = ticker.history(period='max', interval=interval)
         data_redis = data.to_json()
@@ -89,6 +90,7 @@ def get_backtest_data(symbol):
 
     if redis_available and r.exists(redis_name):
         data = pd.read_json(r.lindex(redis_name, 0))
+        LOG.info(f"Retrieved {redis_name} from redis")
     else:
         data = ticker.history(period='max', interval="1d")
     return data
@@ -97,7 +99,10 @@ def get_backtest_data(symbol):
 @app.get("/backtest/SMA_crossover/{symbol}")
 async def get_backtest_results(symbol: str, start_date: str, end_date: str, short: int, long: int, commission: float):
     data = get_backtest_data(symbol)
-    filtered_data = data[(data.index >= start_date) & (data.index <= end_date)]
+    start_date_obj = datetime.strptime(start_date, "%a, %d %b %Y %H:%M:%S %Z").replace(tzinfo=None)
+    end_date_obj = datetime.strptime(end_date, "%a, %d %b %Y %H:%M:%S %Z").replace(tzinfo=None)
+
+    filtered_data = data[(data.index.tz_localize(None) >= start_date_obj) & (data.index.tz_localize(None) <= end_date_obj)]
     bt = Backtest(filtered_data, SmaCross, commission=commission, margin=0.5)
     bt.run(n1=short, n2=long)
     fname = f'SmaCross-{symbol}.html'
@@ -111,7 +116,10 @@ async def get_backtest_results(symbol: str, start_date: str, end_date: str, shor
 @app.get("/backtest/SMA_pullback/{symbol}")
 async def get_backtest_results(symbol: str, start_date: str, end_date: str, period: int, commission: float):
     data = get_backtest_data(symbol)
-    filtered_data = data[(data.index >= start_date) & (data.index <= end_date)]
+    start_date_obj = datetime.strptime(start_date, "%a, %d %b %Y %H:%M:%S %Z").replace(tzinfo=None)
+    end_date_obj = datetime.strptime(end_date, "%a, %d %b %Y %H:%M:%S %Z").replace(tzinfo=None)
+
+    filtered_data = data[(data.index.tz_localize(None) >= start_date_obj) & (data.index.tz_localize(None) <= end_date_obj)]
     bt = Backtest(filtered_data, SmaPullbackStrategy, commission=commission, margin=0.5)
     bt.run(n=period, buffer=0.02)
     fname = f'SmaPullbackStrategy-{symbol}.html'
