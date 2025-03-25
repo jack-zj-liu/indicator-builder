@@ -13,18 +13,32 @@ export default function Backtest_result({type, asset}) {
   const [loading, setLoading] = useState(false);
   const [shorter, setShorter] = useState(10);
   const [longer, setLonger] = useState(25);
+  const [period, setPeriod] = useState(20);
   const [commission, setCommission] = useState(0.002);
 
   const fetchHtml = async () => {
     setLoading(true); // Start loading
     try {
-      const url = `${Constants.BACKEND_URL}/backtest/${type}/${asset}?` + new URLSearchParams({
-          start_date: startDate,
-          end_date: endDate,
-          short: shorter,
-          long: longer,
-          commission: commission
-      }).toString();
+      var url = "";
+      switch(type) {
+        case "SMA_crossover":
+          url = `${Constants.BACKEND_URL}/backtest/${type}/${asset}?` + new URLSearchParams({
+              start_date: startDate,
+              end_date: endDate,
+              short: shorter,
+              long: longer,
+              commission: commission
+          }).toString();
+          break;
+        case "SMA_pullback":
+          url = `${Constants.BACKEND_URL}/backtest/${type}/${asset}?` + new URLSearchParams({
+            start_date: startDate,
+            end_date: endDate,
+            period: period,
+            commission: commission
+        }).toString();
+        break;
+      }
       const response = await fetch(url);
       const htmlText = await response.text();
       
@@ -63,6 +77,57 @@ export default function Backtest_result({type, asset}) {
     }
   };
 
+  const pullbackPeriod = (num) => {
+    if (typeof num !== "number" || isNaN(num)) {
+      setPeriod(0);
+    } else {
+      setPeriod(num);
+    }
+  };
+
+  const inputBoxes = (type) => {
+    switch(type) {
+      case "SMA_crossover":
+        return (
+          <span>
+            <TextField
+              type="number"
+              label="Shorter period"
+              value={shorter}
+              inputProps={{
+                maxLength: 5,
+                step: "1"
+              }}
+              onChange={(e) => shortPeriod(parseInt(e.target.value))}
+            />
+            <TextField
+              type="number"
+              label="Longer period"
+              value={longer}
+              inputProps={{
+                maxLength: 5,
+                step: "1"
+              }}
+              onChange={(e) => longPeriod(parseInt(e.target.value))}
+            />
+          </span>
+        )
+      case "SMA_pullback":
+        return (
+          <TextField
+            type="number"
+            label="Period"
+            value={period}
+            inputProps={{
+              maxLength: 5,
+              step: "1"
+            }}
+            onChange={(e) => pullbackPeriod(parseInt(e.target.value))}
+          />
+        )
+    }
+  }
+
   return (
   <div className="backtest-container">
     <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -96,26 +161,7 @@ export default function Backtest_result({type, asset}) {
       }}
       onChange={(e) => addRate(parseFloat(e.target.value))}
     />
-    <TextField
-      type="number"
-      label="Shorter period"
-      value={shorter}
-      inputProps={{
-        maxLength: 5,
-        step: "1"
-      }}
-      onChange={(e) => shortPeriod(parseInt(e.target.value))}
-    />
-    <TextField
-      type="number"
-      label="Longer period"
-      value={longer}
-      inputProps={{
-        maxLength: 5,
-        step: "1"
-      }}
-      onChange={(e) => longPeriod(parseInt(e.target.value))}
-    />
+    {inputBoxes(type)}
     <button
       onClick={fetchHtml}
       className="backtest-run-button"

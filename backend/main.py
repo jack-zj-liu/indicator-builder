@@ -98,7 +98,7 @@ def get_backtest_data(symbol):
 async def get_backtest_results(symbol: str, start_date: str, end_date: str, short: int, long: int, commission: float):
     data = get_backtest_data(symbol)
     filtered_data = data[(data.index >= start_date) & (data.index <= end_date)]
-    bt = Backtest(filtered_data, SmaCross, commission=commission)
+    bt = Backtest(filtered_data, SmaCross, commission=commission, margin=0.5)
     bt.run(n1=short, n2=long)
     fname = f'SmaCross-{symbol}.html'
     bt.plot(filename=fname, plot_volume=False, superimpose=False, open_browser=False)
@@ -109,11 +109,11 @@ async def get_backtest_results(symbol: str, start_date: str, end_date: str, shor
     return HTMLResponse(content=plot)
 
 @app.get("/backtest/SMA_pullback/{symbol}")
-async def get_backtest_results(symbol: str, start_date: str, end_date: str, short: int, long: int, commission: float):
+async def get_backtest_results(symbol: str, start_date: str, end_date: str, period: int, commission: float):
     data = get_backtest_data(symbol)
     filtered_data = data[(data.index >= start_date) & (data.index <= end_date)]
-    bt = Backtest(filtered_data, SmaPullbackStrategy, commission=commission)
-    bt.run(n1=short, n2=long)
+    bt = Backtest(filtered_data, SmaPullbackStrategy, commission=commission, margin=0.5)
+    bt.run(n=period, buffer=0.02)
     fname = f'SmaPullbackStrategy-{symbol}.html'
     bt.plot(filename=fname, plot_volume=False, superimpose=False, open_browser=False)
     HtmlFile = open(fname, 'r', encoding='utf-8')

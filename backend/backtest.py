@@ -37,9 +37,6 @@ class SmaCross(SignalStrategy, TrailingStrategy):
 
 
 class SmaPullbackStrategy(SignalStrategy, TrailingStrategy):
-    n1 = 10
-    n2 = 25
-
     n = 20  # SMA period
     buffer = 0.02  # Pullback percentage buffer
 
