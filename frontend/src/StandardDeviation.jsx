@@ -138,7 +138,7 @@ const StdDev = () => {
 
   return (
     <div className="indicator-container">
-      <CloudBackGround />
+      {/* <CloudBackGround/> */}
       <h2 className="indicator-title">
         {asset}: Standard Deviation - {timeInterval.toUpperCase()}
       </h2>

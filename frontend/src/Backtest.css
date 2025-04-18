@@ -1,0 +1,39 @@
+body {
+    display: flex;
+    justify-content: center; /* Centers horizontally */
+    align-items: center; /* Centers vertically */
+    min-height: 100vh; /* Ensures the body takes at least the full viewport height */
+    margin: 0; /* Removes default margin */
+}
+
+/* .MuiTextField-root {
+    background-color: #cccccc;
+} */
+
+.backtest-results-container {
+    width: 95vw;
+    height: fit-content;
+    max-width: 1700px;
+    max-height: 2000px;
+    border: 6px solid grey;
+    border-radius: 10px;
+    margin-top: 10px;
+    padding: 0px;
+    overflow: hidden;
+    position: relative;
+}
+
+.backtest-run-button {
+    align-items: center;
+    margin-top: 6px;
+    margin-left: 1vh;
+}
+
+.backtest-results-iframe {
+    position: relative;
+    height: 635px;
+    width: 100%;
+    padding-top: 5px;
+    border: none;
+    overflow: hidden;
+}

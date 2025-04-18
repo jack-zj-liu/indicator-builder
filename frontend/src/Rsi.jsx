@@ -110,7 +110,7 @@ const Rsi = () => {
 
   return (
     <div className="indicator-container">
-      <CloudBackGround/>
+      {/* <CloudBackGround/> */}
       <h2 className="indicator-title">
         {asset}: Relative Strength Index - {timeInterval.toUpperCase()}
       </h2>

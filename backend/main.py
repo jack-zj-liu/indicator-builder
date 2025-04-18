@@ -1,14 +1,15 @@
 from fastapi import BackgroundTasks, FastAPI, HTTPException
-from fastapi.responses import JSONResponse
+from fastapi.responses import JSONResponse, HTMLResponse
 import requests
-from datetime import datetime, timedelta
+from datetime import datetime, timezone
 from fastapi.middleware.cors import CORSMiddleware
 import yfinance as yf
 import pandas as pd
 import os
 import logging
 import uvicorn
-import json
+
+from backtest import Backtest, SmaCross, SmaPullbackStrategy
 
 import constants
 try:
@@ -19,8 +20,6 @@ try:
     redis_available = True
 except:
     redis_available = False
-
-redis_available = False
 
 
 app = FastAPI()
@@ -41,14 +40,12 @@ async def root():
 
 
 def insert_redis_data(redis_name, data):
-    # serialize each dict as a string and insert into redis
-    for entry in data:
-        redis_entry = json.dumps(entry)
+    if r.exists(redis_name) == 0:
+        # serialize each dict as a string and insert into redis
+        redis_entry = data
         r.rpush(redis_name, redis_entry)
-    r.expire(redis_name, REDIS_EXPIRY)
-    inserted = r.llen(redis_name)
-    # for debug, remove later?
-    LOG.debug('Redis: inserted {} items into \'{}\''.format(inserted, redis_name))
+        r.expire(redis_name, REDIS_EXPIRY)
+        LOG.info(f"Inserted {redis_name} into redis")
 
 def get_series_data_redis(symbol, interval, background_tasks: BackgroundTasks):
     ticker = yf.Ticker(symbol)
@@ -56,24 +53,30 @@ def get_series_data_redis(symbol, interval, background_tasks: BackgroundTasks):
 
     # load data from redis if exists
     if r.exists(redis_name):
-        formatted_data = list(map(json.loads, r.lrange(redis_name, 0, -1)))
-        # for debug, remove later?
-        retrieved = r.llen(redis_name)
-        LOG.debug('Redis: retrieved {} items from \'{}\''.format(retrieved, redis_name))
+        data = pd.read_json(r.lindex(redis_name, 0))
+        data = data.Close
+        formatted_data = [
+            {"time": pd.Timestamp(date).strftime('%Y-%m-%d'), "value": round(value, 2)}
+            for date, value in data.items()
+        ]
+        LOG.info(f"Retrieved {redis_name} from redis")
     else:
-        data = ticker.history(period='max', interval=interval).Close
+        data = ticker.history(period='max', interval=interval)
+        data_redis = data.to_json()
+        data = data.Close
         formatted_data = [
             {"time": pd.Timestamp(date).strftime('%Y-%m-%d'), "value": round(value, 2)}
             for date, value in data.items()
         ]
         # do redis insert in background cus it might take a bit
-        background_tasks.add_task(insert_redis_data, redis_name, formatted_data)
+        background_tasks.add_task(insert_redis_data, redis_name, data_redis)
 
     return formatted_data
 
 def get_series_data(symbol, interval):
     ticker = yf.Ticker(symbol)
-    data = ticker.history(period='max', interval=interval).Close
+    data = ticker.history(period='max', interval=interval)
+    data = data.Close
     formatted_data = [
         {"time": pd.Timestamp(date).strftime('%Y-%m-%d'), "value": round(value, 2)}
         for date, value in data.items()
@@ -81,6 +84,51 @@ def get_series_data(symbol, interval):
 
     return formatted_data
 
+def get_backtest_data(symbol):
+    ticker = yf.Ticker(symbol)
+    redis_name = ':'.join([symbol, "1d"])
+
+    if redis_available and r.exists(redis_name):
+        data = pd.read_json(r.lindex(redis_name, 0))
+        LOG.info(f"Retrieved {redis_name} from redis")
+    else:
+        data = ticker.history(period='max', interval="1d")
+    return data
+
+
+@app.get("/backtest/SMA_crossover/{symbol}")
+async def get_backtest_results(symbol: str, start_date: str, end_date: str, short: int, long: int, commission: float):
+    data = get_backtest_data(symbol)
+    start_date_obj = datetime.strptime(start_date, "%a, %d %b %Y %H:%M:%S %Z").replace(tzinfo=None)
+    end_date_obj = datetime.strptime(end_date, "%a, %d %b %Y %H:%M:%S %Z").replace(tzinfo=None)
+
+    filtered_data = data[(data.index.tz_localize(None) >= start_date_obj) & (data.index.tz_localize(None) <= end_date_obj)]
+    bt = Backtest(filtered_data, SmaCross, commission=commission, margin=0.5)
+    bt.run(n1=short, n2=long)
+    fname = f'SmaCross-{symbol}.html'
+    bt.plot(filename=fname, plot_volume=False, superimpose=False, open_browser=False)
+    HtmlFile = open(fname, 'r', encoding='utf-8')
+    plot = HtmlFile.read()
+    HtmlFile.close()
+    os.remove(fname)
+    return HTMLResponse(content=plot)
+
+@app.get("/backtest/SMA_pullback/{symbol}")
+async def get_backtest_results(symbol: str, start_date: str, end_date: str, period: int, commission: float):
+    data = get_backtest_data(symbol)
+    start_date_obj = datetime.strptime(start_date, "%a, %d %b %Y %H:%M:%S %Z").replace(tzinfo=None)
+    end_date_obj = datetime.strptime(end_date, "%a, %d %b %Y %H:%M:%S %Z").replace(tzinfo=None)
+
+    filtered_data = data[(data.index.tz_localize(None) >= start_date_obj) & (data.index.tz_localize(None) <= end_date_obj)]
+    bt = Backtest(filtered_data, SmaPullbackStrategy, commission=commission, margin=0.5)
+    bt.run(n=period, buffer=0.02)
+    fname = f'SmaPullbackStrategy-{symbol}.html'
+    bt.plot(filename=fname, plot_volume=False, superimpose=False, open_browser=False)
+    HtmlFile = open(fname, 'r', encoding='utf-8')
+    plot = HtmlFile.read()
+    HtmlFile.close()
+    os.remove(fname)
+    return HTMLResponse(content=plot)
 
 @app.get("/time_series_daily/{symbol}")
 async def get_time_series_daily(symbol, background_tasks: BackgroundTasks):

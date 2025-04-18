@@ -18,6 +18,8 @@ import StdDev from './StandardDeviation';
 import CciOscillator from './CciOscillator';
 import EMA_BB from './EMA+BollingerBands';
 import MACD_AwesomeOscillator from './MACD+AwesomeOscillator';
+import SMA_crossover_strategy from './SMA_crossover_strategy';
+import SMA_pullback_strategy from './SMA_pullback_strategy';
 
 const App = () => {
   return (
@@ -41,6 +43,8 @@ const App = () => {
         <Route path="/fairgapvalue" element={<FairGapValue />} />
         <Route path="/ema-bb" element={<EMA_BB />} />
         <Route path="/macd-awesomeoscillator" element={<MACD_AwesomeOscillator />} />
+        <Route path="/sma-crossover-strategy" element={<SMA_crossover_strategy />} />
+        <Route path="/sma-pullback-strategy" element={<SMA_pullback_strategy />} />
       </Routes>
     </Router>
   );

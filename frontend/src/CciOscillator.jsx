@@ -158,7 +158,7 @@ const Cci = () => {
 
   return (
     <div className="indicator-container">
-      <CloudBackGround />
+      {/* <CloudBackGround/> */}
       <h2 className="indicator-title">
         {asset}: Commodity Channel Index (CCI) - {timeInterval.toUpperCase()}
       </h2>

@@ -171,7 +171,7 @@ const AroonIndicator = () => {
 
   return (
     <div className="indicator-container">
-      <CloudBackGround />
+      {/* <CloudBackGround/> */}
       <h2 className="indicator-title">
         {asset}: Aroon Indicator - {timeInterval.toUpperCase()}
       </h2>

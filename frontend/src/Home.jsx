@@ -187,6 +187,9 @@ const Home = () => {
               <option value="ADX">Average Directional Index</option>
               <option value="EMA-BB">EMA + BollingerBands</option>
               <option value="MACD-AWESOMEOSCILLATOR">MACD + Awesome Oscillator</option>
+              <option disabled>────────BETA────────</option>
+              <option value="SMA-CROSSOVER-STRATEGY">SMA Crossover Strategy </option>
+              <option value="SMA-PULLBACK-STRATEGY">SMA Pullback Strategy </option>
             </select>
             <select value={timeInterval} onChange={(e) => setTimeInterval(e.target.value)}>
               <option value="daily">Daily</option>

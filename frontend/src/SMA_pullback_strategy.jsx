@@ -7,7 +7,7 @@ import Backtest from './Backtest'
 import * as Constants from '../constants';
 import './Indicator.css';
 
-const Sma = () => {
+const SMA_pullback_strategy = () => {
   useEffect(() => {
     document.title = `SMA Chart`;
   }, []);
@@ -97,7 +97,7 @@ const Sma = () => {
       <div className="indicator-container">
         {/* <CloudBackGround/> */}
         <h2 className="indicator-title">{asset}: Simple Moving Average - {timeInterval.toUpperCase()}</h2>
-        <div className="chart-container" ref={chartContainerRef} />
+        <div className="short-chart-container" ref={chartContainerRef} />
 
         <div className="question-mark-icon" onMouseEnter={() => setIsHovered(true)} onMouseLeave={() => setIsHovered(false)}>?</div>
 
@@ -119,8 +119,10 @@ const Sma = () => {
           </MathJaxContext>
         )}
       </div>
+      <h2 className="strategy-header">SMA Pullback Strategy: Backtesting</h2>
+      <Backtest type={"SMA_pullback"} asset={asset} />
     </div>
   );
 };
 
-export default Sma;
+export default SMA_pullback_strategy;

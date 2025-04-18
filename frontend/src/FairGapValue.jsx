@@ -157,7 +157,7 @@ const FairGapValue = () => {
 
   return (
     <div className="indicator-container">
-      <CloudBackGround />
+      {/* <CloudBackGround/> */}
       <h2 className="indicator-title">
         {asset}: Fair Gap Value - {timeInterval.toUpperCase()}
       </h2>

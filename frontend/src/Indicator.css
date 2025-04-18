@@ -4,6 +4,8 @@ body {
   align-items: center; /* Centers vertically */
   min-height: 100vh; /* Ensures the body takes at least the full viewport height */
   margin: 0; /* Removes default margin */
+  background-image: url(assets/clouds.png);
+  background-attachment: fixed;
 }
 
 .indicator-container {
@@ -39,6 +41,18 @@ body {
 .price-chart-container {
   width: 95vw;
   height: 55vh;
+  max-width: 1700px;
+  max-height: 800px;
+  border: 6px solid grey;
+  border-radius: 10px;
+  padding: 0px;
+  overflow: hidden;
+  position: relative;
+}
+
+.short-chart-container {
+  width: 95vw;
+  height: 35vh;
   max-width: 1700px;
   max-height: 800px;
   border: 6px solid grey;
@@ -86,4 +100,13 @@ body {
   word-wrap: break-word;
   max-width: 700px;
   z-index: 1001;
+}
+
+.strategy-header {
+  text-align: center;
+  margin: 20px 0;
+  padding: 10px 0;
+  border-top: 2px solid #aaaaaa;
+  border-bottom: 2px solid #aaaaaa;
+  font-size: 30px;
 }

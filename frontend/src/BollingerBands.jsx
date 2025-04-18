@@ -126,7 +126,7 @@ const BollingerBands = () => {
   
     return (
       <div className="indicator-container">
-        <CloudBackGround/>
+        {/* <CloudBackGround/> */}
         <h2 className="indicator-title">
           {asset}: Bollinger Bands - {timeInterval.toUpperCase()}
         </h2>
